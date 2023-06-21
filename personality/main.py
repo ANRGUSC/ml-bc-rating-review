@@ -71,7 +71,9 @@ def get_track(track_id: str) -> Dict:
 ATTRIBUTES = ['acousticness', 'danceability', 'energy', 'instrumentalness', 'liveness', 'speechiness', 'valence', 'popularity']
 def get_random_song_attributes() -> Dict[str, float]:
     """Gets a random set of song attributes"""
-    return {attr: round(random.random(), 3) for attr in ATTRIBUTES}
+    attributes = {attr: round(random.random(), 3) for attr in ATTRIBUTES}
+    attributes["popularity"] = random.randint(0, 100)
+    return attributes
 
 def get_song_attributes(track_id: str) -> List[float]:
     res = requests.get(
