@@ -1,0 +1,800 @@
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is I'm Your Puppet by James & Bobby Purify and the attributes for the song are as follows: {'acousticness': 0.0444, 'danceability': 0.652, 'energy': 0.47, 'instrumentalness': 0.0143, 'liveness': 0.583, 'loudness': -11.731, 'speechiness': 0.032, 'tempo': 94.526, 'time_signature': 4, 'valence': 0.735}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is We Belong Together by Ritchie Valens and the attributes for the song are as follows: {'acousticness': 0.872, 'danceability': 0.684, 'energy': 0.247, 'instrumentalness': 0.000166, 'liveness': 0.113, 'loudness': -13.71, 'speechiness': 0.0281, 'tempo': 106.522, 'time_signature': 3, 'valence': 0.768}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is I Think You've Got Your Fools Mixed Up by Brenton Wood and the attributes for the song are as follows: {'acousticness': 0.501, 'danceability': 0.85, 'energy': 0.528, 'instrumentalness': 0.00114, 'liveness': 0.149, 'loudness': -7.937, 'speechiness': 0.0324, 'tempo': 105.396, 'time_signature': 4, 'valence': 0.924}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Runaround Sue by Dion and the attributes for the song are as follows: {'acousticness': 0.451, 'danceability': 0.364, 'energy': 0.607, 'instrumentalness': 0, 'liveness': 0.251, 'loudness': -9.791, 'speechiness': 0.125, 'tempo': 79.987, 'time_signature': 4, 'valence': 0.598}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Unchained Melody by The Righteous Brothers and the attributes for the song are as follows: {'acousticness': 0.396, 'danceability': 0.339, 'energy': 0.208, 'instrumentalness': 0.000519, 'liveness': 0.18, 'loudness': -16.725, 'speechiness': 0.0308, 'tempo': 98.54, 'time_signature': 3, 'valence': 0.288}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Duke of Earl by Gene Chandler and the attributes for the song are as follows: {'acousticness': 0.824, 'danceability': 0.422, 'energy': 0.28, 'instrumentalness': 0, 'liveness': 0.297, 'loudness': -11.277, 'speechiness': 0.0365, 'tempo': 100.839, 'time_signature': 4, 'valence': 0.496}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is The Agony And The Ecstasy by Smokey Robinson and the attributes for the song are as follows: {'acousticness': 0.681, 'danceability': 0.495, 'energy': 0.361, 'instrumentalness': 5.06e-05, 'liveness': 0.12, 'loudness': -10.841, 'speechiness': 0.0341, 'tempo': 139.156, 'time_signature': 4, 'valence': 0.425}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Angel Baby by Rosie & The Originals and the attributes for the song are as follows: {'acousticness': 0.85, 'danceability': 0.6, 'energy': 0.253, 'instrumentalness': 0.00105, 'liveness': 0.115, 'loudness': -11.163, 'speechiness': 0.0257, 'tempo': 98.079, 'time_signature': 3, 'valence': 0.449}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is I'm On The Outside (Looking In) by Little Anthony & The Imperials and the attributes for the song are as follows: {'acousticness': 0.844, 'danceability': 0.39, 'energy': 0.231, 'instrumentalness': 0, 'liveness': 0.489, 'loudness': -12.602, 'speechiness': 0.0516, 'tempo': 185.534, 'time_signature': 3, 'valence': 0.21}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Sitting In The Park by Billy Stewart and the attributes for the song are as follows: {'acousticness': 0.88, 'danceability': 0.571, 'energy': 0.472, 'instrumentalness': 3.04e-05, 'liveness': 0.201, 'loudness': -8.788, 'speechiness': 0.0266, 'tempo': 84.053, 'time_signature': 4, 'valence': 0.603}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is A Teenager In Love by Dion & The Belmonts and the attributes for the song are as follows: {'acousticness': 0.671, 'danceability': 0.555, 'energy': 0.377, 'instrumentalness': 0, 'liveness': 0.128, 'loudness': -9.123, 'speechiness': 0.0295, 'tempo': 78.986, 'time_signature': 4, 'valence': 0.619}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Uptown Girl by Billy Joel and the attributes for the song are as follows: {'acousticness': 0.0755, 'danceability': 0.701, 'energy': 0.944, 'instrumentalness': 0, 'liveness': 0.601, 'loudness': -2.986, 'speechiness': 0.0455, 'tempo': 128.993, 'time_signature': 4, 'valence': 0.792}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Walk Like a Man by Frankie Valli & The Four Seasons and the attributes for the song are as follows: {'acousticness': 0.605, 'danceability': 0.681, 'energy': 0.64, 'instrumentalness': 0, 'liveness': 0.0641, 'loudness': -10.364, 'speechiness': 0.0346, 'tempo': 117.884, 'time_signature': 4, 'valence': 0.966}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Baby You Got It by Brenton Wood and the attributes for the song are as follows: {'acousticness': 0.667, 'danceability': 0.785, 'energy': 0.702, 'instrumentalness': 0, 'liveness': 0.162, 'loudness': -4.757, 'speechiness': 0.0369, 'tempo': 108.639, 'time_signature': 4, 'valence': 0.961}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is The Wanderer by Dion and the attributes for the song are as follows: {'acousticness': 0.301, 'danceability': 0.59, 'energy': 0.546, 'instrumentalness': 0, 'liveness': 0.0936, 'loudness': -10.213, 'speechiness': 0.0436, 'tempo': 114.04, 'time_signature': 4, 'valence': 0.855}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Hey! Love by The Delfonics and the attributes for the song are as follows: {'acousticness': 0.483, 'danceability': 0.309, 'energy': 0.508, 'instrumentalness': 0.000287, 'liveness': 0.174, 'loudness': -11.876, 'speechiness': 0.0351, 'tempo': 135.261, 'time_signature': 4, 'valence': 0.56}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is All I Have to Do Is Dream by The Everly Brothers and the attributes for the song are as follows: {'acousticness': 0.839, 'danceability': 0.534, 'energy': 0.462, 'instrumentalness': 0, 'liveness': 0.129, 'loudness': -8.172, 'speechiness': 0.0266, 'tempo': 96.195, 'time_signature': 4, 'valence': 0.534}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Tell Him by Patti Drew and the attributes for the song are as follows: {'acousticness': 0.687, 'danceability': 0.573, 'energy': 0.471, 'instrumentalness': 0, 'liveness': 0.0826, 'loudness': -8.424, 'speechiness': 0.0253, 'tempo': 96.518, 'time_signature': 4, 'valence': 0.932}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Mama Said by The Shirelles and the attributes for the song are as follows: {'acousticness': 0.57, 'danceability': 0.701, 'energy': 0.322, 'instrumentalness': 0, 'liveness': 0.114, 'loudness': -12.103, 'speechiness': 0.0685, 'tempo': 140.907, 'time_signature': 4, 'valence': 0.84}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Try Me by James Brown and the attributes for the song are as follows: {'acousticness': 0.931, 'danceability': 0.676, 'energy': 0.224, 'instrumentalness': 0, 'liveness': 0.302, 'loudness': -15.193, 'speechiness': 0.0293, 'tempo': 101.47, 'time_signature': 3, 'valence': 0.665}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is I Do Love You by Billy Stewart and the attributes for the song are as follows: {'acousticness': 0.848, 'danceability': 0.377, 'energy': 0.499, 'instrumentalness': 0.000296, 'liveness': 0.268, 'loudness': -7.646, 'speechiness': 0.0314, 'tempo': 176.074, 'time_signature': 4, 'valence': 0.446}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Suavecito by Malo and the attributes for the song are as follows: {'acousticness': 0.412, 'danceability': 0.562, 'energy': 0.561, 'instrumentalness': 1.98e-05, 'liveness': 0.0917, 'loudness': -10.954, 'speechiness': 0.0343, 'tempo': 113.911, 'time_signature': 4, 'valence': 0.666}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Piano Man by Billy Joel and the attributes for the song are as follows: {'acousticness': 0.605, 'danceability': 0.331, 'energy': 0.55, 'instrumentalness': 3.96e-06, 'liveness': 0.192, 'loudness': -6.483, 'speechiness': 0.0272, 'tempo': 177.734, 'time_signature': 3, 'valence': 0.429}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Big Girls Don't Cry by Frankie Valli & The Four Seasons and the attributes for the song are as follows: {'acousticness': 0.393, 'danceability': 0.764, 'energy': 0.84, 'instrumentalness': 8.64e-06, 'liveness': 0.0686, 'loudness': -5.023, 'speechiness': 0.0672, 'tempo': 130.276, 'time_signature': 4, 'valence': 0.843}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is I Like The Way You Love Me by Brenton Wood and the attributes for the song are as follows: {'acousticness': 0.81, 'danceability': 0.477, 'energy': 0.267, 'instrumentalness': 0, 'liveness': 0.336, 'loudness': -8.625, 'speechiness': 0.0301, 'tempo': 152.039, 'time_signature': 3, 'valence': 0.667}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Searching For My Love by Bobby Moore & The Rhythm Aces and the attributes for the song are as follows: {'acousticness': 0.207, 'danceability': 0.694, 'energy': 0.452, 'instrumentalness': 0.0004, 'liveness': 0.152, 'loudness': -10.4, 'speechiness': 0.0691, 'tempo': 97.923, 'time_signature': 4, 'valence': 0.696}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Don't Go Breaking My Heart by Elton John and the attributes for the song are as follows: {'acousticness': 0.149, 'danceability': 0.729, 'energy': 0.844, 'instrumentalness': 2.87e-06, 'liveness': 0.0604, 'loudness': -8.824, 'speechiness': 0.0344, 'tempo': 131.459, 'time_signature': 4, 'valence': 0.777}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is California Dreamin' - Single Version by The Mamas & The Papas and the attributes for the song are as follows: {'acousticness': 0.352, 'danceability': 0.552, 'energy': 0.608, 'instrumentalness': 0, 'liveness': 0.0533, 'loudness': -9.786, 'speechiness': 0.0345, 'tempo': 112.367, 'time_signature': 4, 'valence': 0.637}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is You'll Lose A Good Thing by Barbara Lynn and the attributes for the song are as follows: {'acousticness': 0.606, 'danceability': 0.591, 'energy': 0.324, 'instrumentalness': 0.000144, 'liveness': 0.172, 'loudness': -13.218, 'speechiness': 0.0302, 'tempo': 104.15, 'time_signature': 3, 'valence': 0.617}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Come Go With Me by The Del-Vikings and the attributes for the song are as follows: {'acousticness': 0.713, 'danceability': 0.566, 'energy': 0.534, 'instrumentalness': 0, 'liveness': 0.0883, 'loudness': -9.416, 'speechiness': 0.0409, 'tempo': 129.69, 'time_signature': 4, 'valence': 0.582}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is La-La Means I Love You by The Delfonics and the attributes for the song are as follows: {'acousticness': 0.678, 'danceability': 0.365, 'energy': 0.548, 'instrumentalness': 0, 'liveness': 0.184, 'loudness': -7.727, 'speechiness': 0.0288, 'tempo': 171.242, 'time_signature': 4, 'valence': 0.623}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Baby, I'm For Real by The Originals and the attributes for the song are as follows: {'acousticness': 0.634, 'danceability': 0.341, 'energy': 0.263, 'instrumentalness': 0, 'liveness': 0.121, 'loudness': -12.011, 'speechiness': 0.0288, 'tempo': 150.17, 'time_signature': 3, 'valence': 0.377}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is The Book of Love by The Monotones and the attributes for the song are as follows: {'acousticness': 0.734, 'danceability': 0.428, 'energy': 0.594, 'instrumentalness': 0, 'liveness': 0.567, 'loudness': -12.716, 'speechiness': 0.379, 'tempo': 198.67, 'time_signature': 4, 'valence': 0.556}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Johnny B. Goode by Chuck Berry and the attributes for the song are as follows: {'acousticness': 0.741, 'danceability': 0.534, 'energy': 0.803, 'instrumentalness': 6.07e-05, 'liveness': 0.307, 'loudness': -9.129, 'speechiness': 0.0743, 'tempo': 167.983, 'time_signature': 4, 'valence': 0.969}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Natural High - Single Version by Bloodstone and the attributes for the song are as follows: {'acousticness': 0.729, 'danceability': 0.332, 'energy': 0.371, 'instrumentalness': 0.00021, 'liveness': 0.176, 'loudness': -9.884, 'speechiness': 0.0396, 'tempo': 173.273, 'time_signature': 3, 'valence': 0.375}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Me And You by Brenton Wood and the attributes for the song are as follows: {'acousticness': 0.784, 'danceability': 0.517, 'energy': 0.363, 'instrumentalness': 0.000196, 'liveness': 0.0958, 'loudness': -8.978, 'speechiness': 0.0302, 'tempo': 168.15, 'time_signature': 3, 'valence': 0.661}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Stand by Me by Ben E. King and the attributes for the song are as follows: {'acousticness': 0.428, 'danceability': 0.632, 'energy': 0.232, 'instrumentalness': 4.95e-06, 'liveness': 0.215, 'loudness': -12.326, 'speechiness': 0.0318, 'tempo': 119.136, 'time_signature': 4, 'valence': 0.673}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is I'm So Proud by The Impressions and the attributes for the song are as follows: {'acousticness': 0.966, 'danceability': 0.608, 'energy': 0.121, 'instrumentalness': 0.466, 'liveness': 0.0746, 'loudness': -17.321, 'speechiness': 0.0359, 'tempo': 86.704, 'time_signature': 3, 'valence': 0.288}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Earth Angel (Will You Be Mine) by The Penguins and the attributes for the song are as follows: {'acousticness': 0.865, 'danceability': 0.524, 'energy': 0.177, 'instrumentalness': 0, 'liveness': 0.21, 'loudness': -12.306, 'speechiness': 0.0302, 'tempo': 69.125, 'time_signature': 4, 'valence': 0.466}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Sherry by Frankie Valli & The Four Seasons and the attributes for the song are as follows: {'acousticness': 0.647, 'danceability': 0.701, 'energy': 0.471, 'instrumentalness': 0, 'liveness': 0.125, 'loudness': -8.072, 'speechiness': 0.0421, 'tempo': 117.564, 'time_signature': 4, 'valence': 0.69}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Lean on Me by Bill Withers and the attributes for the song are as follows: {'acousticness': 0.782, 'danceability': 0.619, 'energy': 0.22, 'instrumentalness': 1.19e-05, 'liveness': 0.124, 'loudness': -13.843, 'speechiness': 0.0672, 'tempo': 75.143, 'time_signature': 4, 'valence': 0.426}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Ooo Baby Baby by Smokey Robinson & The Miracles and the attributes for the song are as follows: {'acousticness': 0.81, 'danceability': 0.185, 'energy': 0.344, 'instrumentalness': 0, 'liveness': 0.166, 'loudness': -9.378, 'speechiness': 0.0295, 'tempo': 178.635, 'time_signature': 3, 'valence': 0.424}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Dream Lover - 2006 Remaster by Bobby Darin and the attributes for the song are as follows: {'acousticness': 0.703, 'danceability': 0.526, 'energy': 0.608, 'instrumentalness': 0, 'liveness': 0.438, 'loudness': -6.855, 'speechiness': 0.0468, 'tempo': 131.851, 'time_signature': 4, 'valence': 0.723}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Just My Imagination (Running Away With Me) by The Temptations and the attributes for the song are as follows: {'acousticness': 0.88, 'danceability': 0.425, 'energy': 0.242, 'instrumentalness': 0.0118, 'liveness': 0.195, 'loudness': -15.424, 'speechiness': 0.0267, 'tempo': 92.472, 'time_signature': 4, 'valence': 0.477}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Build Me Up Buttercup by The Foundations and the attributes for the song are as follows: {'acousticness': 0.242, 'danceability': 0.564, 'energy': 0.555, 'instrumentalness': 0, 'liveness': 0.244, 'loudness': -9.07, 'speechiness': 0.0293, 'tempo': 67.082, 'time_signature': 4, 'valence': 0.882}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Dedicated To The One I Love by The Shirelles and the attributes for the song are as follows: {'acousticness': 0.8, 'danceability': 0.462, 'energy': 0.191, 'instrumentalness': 0, 'liveness': 0.164, 'loudness': -11.901, 'speechiness': 0.0339, 'tempo': 80.536, 'time_signature': 4, 'valence': 0.537}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is I Want Love by Brenton Wood and the attributes for the song are as follows: {'acousticness': 0.652, 'danceability': 0.552, 'energy': 0.338, 'instrumentalness': 0, 'liveness': 0.0794, 'loudness': -12.716, 'speechiness': 0.0268, 'tempo': 81.871, 'time_signature': 3, 'valence': 0.811}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is To Say I Love You by Ralfi Pagan and the attributes for the song are as follows: {'acousticness': 0.757, 'danceability': 0.49, 'energy': 0.361, 'instrumentalness': 7.64e-05, 'liveness': 0.0478, 'loudness': -13.677, 'speechiness': 0.0737, 'tempo': 156.964, 'time_signature': 4, 'valence': 0.583}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Lollipop by The Chordettes and the attributes for the song are as follows: {'acousticness': 0.585, 'danceability': 0.65, 'energy': 0.593, 'instrumentalness': 0.00244, 'liveness': 0.441, 'loudness': -6.374, 'speechiness': 0.122, 'tempo': 143.179, 'time_signature': 4, 'valence': 0.825}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
+You are a music expert Whose job is to look at a song name and a list of the song attributes and produce recommended songs based off of the provided song and attribute values.
+The current song is Tiny Dancer by Elton John and the attributes for the song are as follows: {'acousticness': 0.382, 'danceability': 0.414, 'energy': 0.428, 'instrumentalness': 0.000243, 'liveness': 0.148, 'loudness': -11.097, 'speechiness': 0.0278, 'tempo': 145.075, 'time_signature': 4, 'valence': 0.282}.
+Acousticness: This value describes how acoustic a song is. A score of 1.0 means the song is most likely to be an acoustic one.
+Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
+Energy represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy.
+The instrumentalness value represents the amount of vocals in the song. The closer it is to 1.0, the more instrumental the song is.
+Liveness, when above 0.8 provides strong likelihood that the track is live.
+The overall loudness of a track in decibels (dB). Loudness values are averaged across the entire track and are useful for comparing relative loudness of tracks. Loudness is the quality of a sound that is the primary psychological correlate of physical strength (amplitude). Values typically range between -60 and 0 db.
+Speechiness detects the presence of spoken words in a track. If the speechiness of a song is above 0.66, it is probably made of spoken words, a score between 0.33 and 0.66 is a song that may contain both music and words, and a score below 0.33 means the song does not have any speech.
+Tempo represents the overall estimated tempo of a track in beats per minute (BPM).
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). The time signature ranges from 3 to 7 indicating time signatures of 3/4, to 7/4.
+Valence is a measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative.
+Please create a list of 10 recommended songs based on these attributes.
+
+
+
