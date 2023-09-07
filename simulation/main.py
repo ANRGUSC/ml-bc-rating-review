@@ -6,6 +6,11 @@ import pandas as pd
 from functools import partial
 from itertools import combinations
 
+from feature_gen import FeatureGenerator
+from value_func import ValueFunction
+from feature_gen import Feature_Methods
+from group_func import GroupSplitting
+
 def all_subsets(elements: Iterable, exclude: Iterable = []) -> Iterable:
     """Returns all subsets (of length > 0) of elements excluding those in exclude"""
     # yield empty set
@@ -22,10 +27,12 @@ def main():
     num_users = 10
 
     # users are represented by a vector of features
-    users = np.random.rand(num_users, num_features)
+    # users = FeatureGenerator.uniform(num_users, num_features)
+    # users = Feature_Methods.get_feature_generator(Feature_Methods.UNIFORM)(num_users, num_features)
+    users = Feature_Methods.get_feature_generator(Feature_Methods.GAUSSIAN)(num_users, num_features, mean=0.5, std_dev=0.1)
 
     # experts are represented by a vector of features
-    experts = np.random.rand(num_experts, num_features)
+    experts = FeatureGenerator.uniform(num_experts, num_features)
 
     # aggregate function is average of user features
     aggregate = partial(np.mean, axis=0)
@@ -41,6 +48,7 @@ def main():
         for subset in all_subsets(all_users, exclude=[user]):
             # compute value of subset
             subset_value = value(users[list(subset)])
+            # subset_value = ValueFunction.dot_product(users[list(subset)])
             # compute value of subset with user
             subset_with_user_value = value(users[list(subset) + [user]])
             # compute marginal contribution of user
@@ -57,9 +65,9 @@ def main():
     points = np.zeros(num_users)
     for i in range(num_rounds):
         # random permutation of users
-        permutation = np.random.permutation(num_users)
+        # permutation = np.random.permutation(num_users)
         # split users into groups
-        groups = np.array_split(permutation, num_groups)
+        groups = GroupSplitting.permutation_split(num_users, num_groups)
         # ask experts to rank users in each group (apply value function to each group)
         group_values = np.array([value(users[group]) for group in groups])
         # give a point to each user in the winning group
