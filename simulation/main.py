@@ -6,10 +6,11 @@ import pandas as pd
 from functools import partial
 from itertools import combinations
 
-from feature_gen import FeatureGenerator
-from value_func import ValueFunction
-from feature_gen import Feature_Methods
 from group_func import GroupSplitting
+from feature_gen import gaussian, uniform, triangular
+
+#Add a global input that controls numpy's random seed
+np.random.seed(0)
 
 def all_subsets(elements: Iterable, exclude: Iterable = []) -> Iterable:
     """Returns all subsets (of length > 0) of elements excluding those in exclude"""
@@ -21,18 +22,40 @@ def all_subsets(elements: Iterable, exclude: Iterable = []) -> Iterable:
                 yield subset
 
 def main():
+    ### Functions to be used in the simulation ###
+
+    # distributions of user and expert features
+    distributions = [
+        partial(uniform),
+        partial(gaussian, mean=0.5, std_dev=0.1),
+        partial(gaussian, mean=2, std_dev=0.1),
+        partial(triangular, left=0, mode=0.5, right=1),  
+    ]
+
+    #TODO: Add partial functions for different aggregate functions
+
+
+    #TODO: Use partial to rewrite the value function
+
+    #TODO: Use partial to rewrite the group splitting function
+
+    #TODO: Use partial to rewrite the winning points function
+
+
     # users are represented by a vector of features
     num_features = 3
     num_experts = 2
     num_users = 10
 
     # users are represented by a vector of features
-    # users = FeatureGenerator.uniform(num_users, num_features)
-    # users = Feature_Methods.get_feature_generator(Feature_Methods.UNIFORM)(num_users, num_features)
-    users = Feature_Methods.get_feature_generator(Feature_Methods.GAUSSIAN)(num_users, num_features, mean=0.5, std_dev=0.1)
+
+    
+
+    users = distributions[0](num_users, num_features)
+    #users = Feature_Methods.get_feature_generator(Feature_Methods.GAUSSIAN)(num_users, num_features, mean=0.5, std_dev=0.1)
 
     # experts are represented by a vector of features
-    experts = FeatureGenerator.uniform(num_experts, num_features)
+    experts = distributions[0](num_experts, num_features)
 
     # aggregate function is average of user features
     aggregate = partial(np.mean, axis=0)
@@ -68,6 +91,8 @@ def main():
         # permutation = np.random.permutation(num_users)
         # split users into groups
         groups = GroupSplitting.permutation_split(num_users, num_groups)
+
+        #TODO: Modualize the point function
         # ask experts to rank users in each group (apply value function to each group)
         group_values = np.array([value(users[group]) for group in groups])
         # give a point to each user in the winning group
