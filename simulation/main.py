@@ -5,15 +5,18 @@ import plotly.express as px
 import pandas as pd
 from functools import partial
 from itertools import combinations
+import pathlib
 
 from group_func_helper import permutation_split
 from feature_func_helper import gaussian, uniform, triangular
-from value_func_helper import dot_product
+from value_func_helper import dot_product, l2_norm
 from winning_func_helper import max_points
 #Add a global input that controls numpy's random seed
 np.random.seed(0)
 
-distribution_methods = {
+thisdir = pathlib.Path(__file__).parent.resolve()
+
+feature_methods = {
     'uniform': partial(uniform),
     'gaussian_mean_0.5': partial(gaussian, mean=0.5, std_dev=0.1),
     'gaussian_mean_2': partial(gaussian, mean=2, std_dev=0.1),
@@ -21,9 +24,9 @@ distribution_methods = {
 }
 
 aggregate_methods = {
-    'average': partial(np.mean, axis=0)
+    'average': partial(np.mean, axis=0),
+    'median': partial(np.median, axis=0)
 }
-
 
 ## NOTE some of these may not be necessary to have in a partial since they are not provided different arguments
 group_methods = {
@@ -32,6 +35,8 @@ group_methods = {
 
 value_methods = {
     'dot_product': partial(dot_product),
+    # 'dot_product_with_noise': partial(dot_product, noise=np.gaus)
+    'l2_norm': partial(l2_norm)
 }
 
 winning_methods = {
@@ -46,38 +51,27 @@ def all_subsets(elements: Iterable, exclude: Iterable = []) -> Iterable:
             if not any(x in subset for x in exclude):
                 yield subset
 
-## Configures the simulation for a specific run
-## Has some default values provided so you can call w/o args
-def configure_simulation(
-    expert_distribution_method='uniform',
-    user_distribution_method='uniform',
-    aggregate_method='average',
-    value_method='dot_product',
-    group_method='permutation',
-    winning_method='max_points'
-):
-    configuration = {
-        'expert_distribution': distribution_methods[expert_distribution_method],
-        'user_distribution': distribution_methods[user_distribution_method],
+
+def run_sim(savedir: pathlib.Path,
+            expert_distribution_method='uniform',
+            user_distribution_method='uniform',
+            aggregate_method='average',
+            value_method='dot_product',
+            group_method='permutation',
+            winning_method='max_points',
+            num_features: int = 3,
+            num_experts: int = 2,
+            num_users: int = 10):
+    ### Functions to be used in the simulation ###
+    # distributions of user and expert features
+    config = {
+        'expert_distribution': feature_methods[expert_distribution_method],
+        'user_distribution': feature_methods[user_distribution_method],
         'aggregate': aggregate_methods[aggregate_method],
         'value': value_methods[value_method],
         'group': group_methods[group_method],
         'winning': winning_methods[winning_method]
     }
-
-    return configuration
-
-def main():
-    ### Functions to be used in the simulation ###
-    # distributions of user and expert features
-
-    # users are represented by a vector of features
-    num_features = 3
-    num_experts = 2
-    num_users = 10
-
-    ## Configure one simulation run with defaults
-    config = configure_simulation()
 
     ## This sections grabs the necessary config functions
     users = config['user_distribution'](num_users, num_features)
@@ -128,8 +122,10 @@ def main():
         # ask experts to rank users in each group (apply value function to each group)
         group_values = np.array([value_func(experts, users[group], aggregate) for group in groups])
         # give a point to each user in the winning group
-        winning_group = np.argmax(group_values)
-        points[groups[winning_group]] += 1
+        winning_groups = winning_method(group_values)
+
+        for winning_group, points_won in winning_groups.items():
+            points[groups[winning_group]] += points_won
 
     # plot actual Shapley values against points
     df = pd.DataFrame({
@@ -138,14 +134,20 @@ def main():
         'points': points
     })
 
+    # save stuff
+    savedir.mkdir(exist_ok=True, parents=True)
+    df.to_csv(savedir / 'sim.csv')
     fig = px.scatter(
         df, x='shapley', y='points',
         hover_name='user',
         template='plotly_white',
     )
     fig.update_traces(marker=dict(size=12))
-    fig.write_image('shapley.png')
+    fig.write_image(str(savedir / 'shapley.png'))
 
+
+def main():
+    run_sim(thisdir / 'simulation_1')
 
 if __name__ == '__main__':
     main()
