@@ -9,10 +9,9 @@ import pathlib
 
 from group_func_helper import permutation_split
 from feature_func_helper import gaussian, uniform, triangular
-from value_func_helper import dot_product, l2_norm
+from value_func_helper import dot_product, l2_norm, l2_norm_mean, l2_norm_median, dot_product_mean, dot_product_median
 from winning_func_helper import max_points
 #Add a global input that controls numpy's random seed
-np.random.seed(0)
 
 thisdir = pathlib.Path(__file__).parent.resolve()
 
@@ -35,12 +34,16 @@ group_methods = {
 
 value_methods = {
     'dot_product': partial(dot_product),
-    # 'dot_product_with_noise': partial(dot_product, noise=np.gaus)
-    'l2_norm': partial(l2_norm)
+    'l2_norm': partial(l2_norm),
+    'l2_norm_mean': partial(l2_norm_mean),
+    'l2_norm_median': partial(l2_norm_median),
+    'dot_product_mean': partial(dot_product_mean),
+    'dot_product_median': partial(dot_product_median)
 }
 
 winning_methods = {
     'max_points': partial(max_points),
+    # 'max_points_with_noise': partial(max_points, noise=np.gaus)
 }
 
 def all_subsets(elements: Iterable, exclude: Iterable = []) -> Iterable:
@@ -61,7 +64,13 @@ def run_sim(savedir: pathlib.Path,
             winning_method='max_points',
             num_features: int = 3,
             num_experts: int = 2,
-            num_users: int = 10):
+            num_users: int = 10,
+            num_groups: int = 2,
+            num_rounds: int = 10000,
+            random_seed: int = 0):
+
+    np.random.seed(random_seed)
+
     ### Functions to be used in the simulation ###
     # distributions of user and expert features
     config = {
@@ -109,8 +118,6 @@ def run_sim(savedir: pathlib.Path,
 
     # simulate protocol which estimates Shapley values by iteratively splitting users into two groups and asking experts to rank them
     # experts are asked to rank users in each group
-    num_rounds = 10000
-    num_groups = 2
     points = np.zeros(num_users)
     for i in range(num_rounds):
         # random permutation of users
@@ -122,8 +129,7 @@ def run_sim(savedir: pathlib.Path,
         # ask experts to rank users in each group (apply value function to each group)
         group_values = np.array([value_func(experts, users[group], aggregate) for group in groups])
         # give a point to each user in the winning group
-        winning_groups = winning_method(group_values)
-
+        winning_groups = config['winning'](group_values)
         for winning_group, points_won in winning_groups.items():
             points[groups[winning_group]] += points_won
 
@@ -147,7 +153,8 @@ def run_sim(savedir: pathlib.Path,
 
 
 def main():
-    run_sim(thisdir / 'simulation_1')
+    run_sim(thisdir / 'simulation_1', num_users=10, num_experts=2, num_groups=2, num_rounds=10000)
+    run_sim(thisdir / 'simulation_2', expert_distribution_method='gaussian_mean_0.5',num_users=10, num_experts=2, num_groups=2, num_rounds=10000)
 
 if __name__ == '__main__':
     main()
