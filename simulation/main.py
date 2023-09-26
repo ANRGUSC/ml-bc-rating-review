@@ -125,7 +125,6 @@ def run_sim(savedir: pathlib.Path,
         # split users into groups
         groups = config['group'](num_users, num_groups)
 
-        #TODO: Modualize the point function
         # ask experts to rank users in each group (apply value function to each group)
         group_values = np.array([value_func(experts, users[group], aggregate) for group in groups])
         # give a point to each user in the winning group
@@ -141,6 +140,8 @@ def run_sim(savedir: pathlib.Path,
     })
 
     # save stuff
+    #TODO: Save data for each round in CSV, maybe add a separate round csv file
+    #TODO: Consider storing it in a JSON, target: re-run the simulation from output files
     savedir.mkdir(exist_ok=True, parents=True)
     df.to_csv(savedir / 'sim.csv')
     fig = px.scatter(

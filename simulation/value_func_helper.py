@@ -45,6 +45,7 @@ def l2_norm_mean(experts, coalition):
     return np.mean(l2_norm)
 
 #TODO: Needs to be discussed
+#dot product with gaussian noise
 def dot_product_with_noise(experts, coalition, noise):
         if len(coalition) <= 0:
                 return 0
