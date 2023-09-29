@@ -1,0 +1,1 @@
+{"expert_distribution_method": "uniform", "user_distribution_method": "uniform", "aggregate_method": "average", "value_method": "dot_product", "group_method": "permutation", "winning_method": "max_points", "num_features": 3, "num_experts": 3, "num_users": 15, "num_groups": 3, "num_rounds": 10000, "random_seed": 0}

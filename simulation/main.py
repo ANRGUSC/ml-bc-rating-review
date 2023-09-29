@@ -6,14 +6,17 @@ import pandas as pd
 from functools import partial
 from itertools import combinations
 import pathlib
+import json
+import inspect
 
-from group_func_helper import permutation_split
-from feature_func_helper import gaussian, uniform, triangular
-from value_func_helper import dot_product, l2_norm, l2_norm_mean, l2_norm_median, dot_product_mean, dot_product_median
-from winning_func_helper import max_points
+from helpers.group_func_helper import permutation_split
+from helpers.feature_func_helper import gaussian, uniform, triangular
+from helpers.value_func_helper import dot_product, l2_norm, l2_norm_mean, l2_norm_median, dot_product_mean, dot_product_median
+from helpers.winning_func_helper import max_points
 #Add a global input that controls numpy's random seed
 
 thisdir = pathlib.Path(__file__).parent.resolve()
+sim_results = thisdir / 'results'
 
 feature_methods = {
     'uniform': partial(uniform),
@@ -46,6 +49,33 @@ winning_methods = {
     # 'max_points_with_noise': partial(max_points, noise=np.gaus)
 }
 
+def save_sim_config(savedir, **kwargs):
+    config = {
+        'expert_distribution_method': kwargs.get('expert_distribution_method', 'uniform'),
+        'user_distribution_method': kwargs.get('user_distribution_method', 'uniform'),
+        'aggregate_method': kwargs.get('aggregate_method', 'average'),
+        'value_method': kwargs.get('value_method', 'dot_product'),
+        'group_method': kwargs.get('group_method', 'permutation'),
+        'winning_method': kwargs.get('winning_method', 'max_points'),
+        'num_features': kwargs.get('num_features', 3),
+        'num_experts': kwargs.get('num_experts', 2),
+        'num_users': kwargs.get('num_users', 10),
+        'num_groups': kwargs.get('num_groups', 2),
+        'num_rounds': kwargs.get('num_rounds', 10000),
+        'random_seed': kwargs.get('random_seed', 0),
+    }
+
+    with open(savedir / 'config.json', 'w') as f:
+        json.dump(config, f)
+
+## can be called to run the simulation from a previous run
+def run_sim_from_config(filepath):
+    with open(filepath, 'r') as f:
+        config = json.load(f)
+
+    run_sim(**config, save_config=False)
+        
+
 def all_subsets(elements: Iterable, exclude: Iterable = []) -> Iterable:
     """Returns all subsets (of length > 0) of elements excluding those in exclude"""
     # yield empty set
@@ -67,7 +97,8 @@ def run_sim(savedir: pathlib.Path,
             num_users: int = 10,
             num_groups: int = 2,
             num_rounds: int = 10000,
-            random_seed: int = 0):
+            random_seed: int = 0,
+            save_config: bool = True):
 
     np.random.seed(random_seed)
 
@@ -119,6 +150,9 @@ def run_sim(savedir: pathlib.Path,
     # simulate protocol which estimates Shapley values by iteratively splitting users into two groups and asking experts to rank them
     # experts are asked to rank users in each group
     points = np.zeros(num_users)
+
+    round_data = pd.DataFrame()
+
     for i in range(num_rounds):
         # random permutation of users
         # permutation = np.random.permutation(num_users)
@@ -132,6 +166,20 @@ def run_sim(savedir: pathlib.Path,
         for winning_group, points_won in winning_groups.items():
             points[groups[winning_group]] += points_won
 
+        current_rount = pd.DataFrame({
+            'user': list(range(num_users)), 
+            'points_round_{}'.format(i+1): points
+        })
+
+        if round_data.empty:
+            round_data = current_rount
+        else:
+            round_data = round_data.merge(current_rount, on='user')
+
+    savedir.mkdir(exist_ok=True, parents=True)
+
+    round_data.to_csv(savedir / 'round_data.csv', index=False)
+
     # plot actual Shapley values against points
     df = pd.DataFrame({
         'user': list(range(num_users)),
@@ -142,7 +190,6 @@ def run_sim(savedir: pathlib.Path,
     # save stuff
     #TODO: Save data for each round in CSV, maybe add a separate round csv file
     #TODO: Consider storing it in a JSON, target: re-run the simulation from output files
-    savedir.mkdir(exist_ok=True, parents=True)
     df.to_csv(savedir / 'sim.csv')
     fig = px.scatter(
         df, x='shapley', y='points',
@@ -152,10 +199,56 @@ def run_sim(savedir: pathlib.Path,
     fig.update_traces(marker=dict(size=12))
     fig.write_image(str(savedir / 'shapley.png'))
 
+    if save_config:
+        frame = inspect.currentframe()
+        args, _, _, values = inspect.getargvalues(frame)
+
+        config_to_save = {arg: values[arg] for arg in args if arg not in ["frame", "rand_gen_state"]}
+        save_sim_config(**config_to_save)
+
 
 def main():
-    run_sim(thisdir / 'simulation_1', num_users=10, num_experts=2, num_groups=2, num_rounds=10000)
-    run_sim(thisdir / 'simulation_2', expert_distribution_method='gaussian_mean_0.5',num_users=10, num_experts=2, num_groups=2, num_rounds=10000)
+    # Default with different numbers
+    run_sim(sim_results / 'uniform_avg_dot_max_15u_3e_3g', 
+            num_users=15, num_experts=3, num_groups=3, num_rounds=10000)
+
+    # Gaussian distribution for experts
+    run_sim(sim_results / 'gauss0.5_avg_dot_max', 
+            expert_distribution_method='gaussian_mean_0.5', num_users=10, num_experts=2, num_groups=2, num_rounds=10000)
+
+    # Different Gaussian and median aggregate
+    run_sim(sim_results / 'gauss2_median_dot_max', 
+            expert_distribution_method='gaussian_mean_2', aggregate_method='median', num_users=10, num_experts=2, num_groups=2, num_rounds=10000)
+
+    # Triangular distribution with L2 norm
+    run_sim(sim_results / 'triangular_avg_l2_max', 
+            expert_distribution_method='triangular', value_method='l2_norm', num_users=10, num_experts=2, num_groups=2, num_rounds=10000)
+
+    # Uniform distribution with dot_product_mean
+    run_sim(sim_results / 'uniform_avg_dotmean_max', 
+            value_method='dot_product_mean', num_users=10, num_experts=2, num_groups=2, num_rounds=10000)
+
+    # Gaussian, median aggregate, dot_product_median
+    run_sim(sim_results / 'gauss0.5_med_dotmed_max', 
+            expert_distribution_method='gaussian_mean_0.5', aggregate_method='median', value_method='dot_product_median', 
+            num_users=10, num_experts=2, num_groups=2, num_rounds=10000)
+
+    # Triangular with L2 norm mean
+    run_sim(sim_results / 'triangular_avg_l2mean_max', 
+            expert_distribution_method='triangular', value_method='l2_norm_mean', num_users=10, num_experts=2, num_groups=2, num_rounds=10000)
+
+    # Gaussian with L2 norm median
+    run_sim(sim_results / 'gauss2_avg_l2med_max', 
+            expert_distribution_method='gaussian_mean_2', value_method='l2_norm_median', num_users=10, num_experts=2, num_groups=2, num_rounds=10000)
+
+    # Default with more rounds
+    run_sim(sim_results / 'uniform_avg_dot_max_20krnds', 
+            num_users=10, num_experts=2, num_groups=2, num_rounds=20000)
+
+    # Gaussian mean 0.5 with L2 norm and more rounds
+    run_sim(sim_results / 'gauss0.5_avg_l2_max_15krnds', 
+            expert_distribution_method='gaussian_mean_0.5', value_method='l2_norm', num_users=10, num_experts=2, num_groups=2, num_rounds=15000)
+
 
 if __name__ == '__main__':
     main()
