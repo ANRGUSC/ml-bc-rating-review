@@ -166,19 +166,19 @@ def run_sim(savedir: pathlib.Path,
         for winning_group, points_won in winning_groups.items():
             points[groups[winning_group]] += points_won
 
-        current_rount = pd.DataFrame({
-            'user': list(range(num_users)), 
-            'points_round_{}'.format(i+1): points
-        })
+    #     current_rount = pd.DataFrame({
+    #         'user': list(range(num_users)), 
+    #         'points_round_{}'.format(i+1): points
+    #     })
 
-        if round_data.empty:
-            round_data = current_rount
-        else:
-            round_data = round_data.merge(current_rount, on='user')
+    #     if round_data.empty:
+    #         round_data = current_rount
+    #     else:
+    #         round_data = round_data.merge(current_rount, on='user')
 
     savedir.mkdir(exist_ok=True, parents=True)
 
-    round_data.to_csv(savedir / 'round_data.csv', index=False)
+    # round_data.to_csv(savedir / 'round_data.csv', index=False)
 
     # plot actual Shapley values against points
     df = pd.DataFrame({
