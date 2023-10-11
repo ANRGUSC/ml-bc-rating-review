@@ -188,8 +188,7 @@ def run_sim(savedir: pathlib.Path,
     })
 
     # save stuff
-    #TODO: Save data for each round in CSV, maybe add a separate round csv file
-    #TODO: Consider storing it in a JSON, target: re-run the simulation from output files
+    #TODO: Fix the round.csv file
     df.to_csv(savedir / 'sim.csv')
     fig = px.scatter(
         df, x='shapley', y='points',
@@ -206,7 +205,7 @@ def run_sim(savedir: pathlib.Path,
         config_to_save = {arg: values[arg] for arg in args if arg not in ["frame", "rand_gen_state"]}
         save_sim_config(**config_to_save)
 
-
+#TODO: Add the presence of the model and initialize it to maybe 60-70% of the expert value.
 def main():
     # Default with different numbers
     run_sim(sim_results / 'uniform_avg_dot_max_15u_3e_3g', 

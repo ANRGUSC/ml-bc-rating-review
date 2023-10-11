@@ -6,6 +6,8 @@ from IPython.display import HTML
 # Constants
 NUM_USER_POINTS = 10
 
+#TODO: Maybe plot every n rounds instead of every rounds
+#TODO: Make it into a function which could be called inside main
 # Initialization
 def initialize_points():
     model_point = (random.uniform(0, 10), random.uniform(0, 10), 0)
