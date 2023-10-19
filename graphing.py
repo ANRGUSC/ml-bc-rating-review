@@ -330,6 +330,9 @@ def multiple_dimension():
     plt.ylabel("Distance")
     plt.show()
 
+    #Save to PNG
+    plt.savefig('multi_dimension.png')
+
 
 
 
