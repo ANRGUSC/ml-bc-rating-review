@@ -311,6 +311,14 @@ def multiple_dimension():
     for point in model_point_history4:
         distances4.append(np.linalg.norm(point - expert_point4))
     #Plot the distance over time, add legend, show the number of dimensions
+
+    #Normalize the data to the same scale
+    distances1 = (distances1 - np.min(distances1)) / (np.max(distances1) - np.min(distances1))
+    distances2 = (distances2 - np.min(distances2)) / (np.max(distances2) - np.min(distances2))
+    distances3 = (distances3 - np.min(distances3)) / (np.max(distances3) - np.min(distances3))
+    distances4 = (distances4 - np.min(distances4)) / (np.max(distances4) - np.min(distances4))
+
+
     plt.figure(figsize=(10, 7))
     plt.plot(distances1, label = "10 dimensions")
     plt.plot(distances2, label = "100 dimensions")
@@ -321,6 +329,7 @@ def multiple_dimension():
     plt.xlabel("Round Number")
     plt.ylabel("Distance")
     plt.show()
+
 
 
 
