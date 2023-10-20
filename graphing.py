@@ -17,7 +17,7 @@ from copy import deepcopy
 NUM_USER_POINTS = 10
 NUM_OF_ROUNDS = 100
 DELTA = 0.1
-EXPERT_POINT_SUBSET_SIZE = 3
+EXPERT_POINT_SUBSET_SIZE = 5
 
 # Initialization
 def initialize_points(dimension):
@@ -188,8 +188,15 @@ def simulation(model_point, expert_point, user_points, use_real_shapley: bool = 
         candidate_point_2 = model_point + DELTA * (centroid_2 - model_point)
 
         # let new model point be the one closer to the expert point
+        dist_1 = np.linalg.norm(candidate_point_1 - expert_point)
+        dist_2 = np.linalg.norm(candidate_point_2 - expert_point)
+        dist_cur = np.linalg.norm(model_point - expert_point)
         diff = np.linalg.norm(candidate_point_1 - expert_point) - np.linalg.norm(candidate_point_2 - expert_point)
-        if diff < 0:
+        if dist_cur < dist_1 and dist_cur < dist_2: 
+            # both points are further from expert point than current model point
+            # don't update model point
+            pass
+        elif dist_1 < dist_2:
             model_point = candidate_point_1
             if not use_real_shapley: # give user group 1 a point
                 shapley_values[user_group_1] += 1
@@ -303,9 +310,6 @@ def multiple_dimension(dims: List[int] = [2**i for i in range(1, 7)]):
     )
     fig.show()
     fig.write_image("shapley_error.png")
-
-
-
 
 if __name__ == "__main__":
     # main()
