@@ -8,6 +8,7 @@ from IPython.display import HTML
 import numpy as np
 import plotly.express as px
 import pandas as pd
+from copy import deepcopy
 
 #TODO: Simulate it in multiple dimensions, track the distance to expert point over time (see if it converges)
 #TODO: Use estimated shapley values to compute weighted centroid of each group
@@ -15,30 +16,25 @@ import pandas as pd
 # Constants
 NUM_USER_POINTS = 10
 NUM_OF_ROUNDS = 100
+DELTA = 0.1
 
 # Initialization
 def initialize_points(dimension):
-    model_point = np.random.uniform(0, 1, size= dimension)
-    expert_point = np.random.uniform(0, 1, size= dimension)
-    user_points = np.random.uniform(0, 1, size=(NUM_USER_POINTS, dimension))
+    model_point = np.random.uniform(0, 10, size= dimension)
+    user_points = np.random.uniform(0, 10, size=(NUM_USER_POINTS, dimension))
 
-    centroid = np.mean(user_points, axis=0)
-    max_distance = np.max(np.linalg.norm(user_points - centroid, axis=1))
-    expert_point = centroid + np.random.uniform(0, max_distance / 3, size=dimension)
+    # random subset of 5 user points
+    users_shuffled = np.random.permutation(list(range(len(user_points))))
+    user_group = users_shuffled[:len(users_shuffled) // 2]
+    centroid = np.mean(user_points[user_group], axis=0)
+    expert_point = centroid
+
+
+    # expert_point = np.mean(user_points, axis=0)
+    # max_distance = np.max(np.linalg.norm(user_points - centroid, axis=1))
+    # expert_point = centroid + np.random.uniform(0, max_distance / 3, size=dimension)
     
     return model_point, expert_point, user_points
-
-#model_point, expert_point, user_points = initialize_points()
-
-
-def update_model_point(model_point):
-    """Update the position of the model_point and the round number."""
-    # Randomly move the point within a range of [-0.5, 0.5] for both x and y coordinates
-    new_x = model_point[0] + random.uniform(-0.5, 0.5)
-    new_y = model_point[1] + random.uniform(-0.5, 0.5)
-    # Increase the round number by 1
-    new_round = model_point[2] + 1
-    return [new_x, new_y, new_round]
 
 # Visualization
 def plot_all_points_movement(model_point_history, user_points, expert_point):
@@ -70,8 +66,8 @@ def plot_all_points_movement(model_point_history, user_points, expert_point):
 
 def animate_all_points_movement(model_point_histories, user_points, expert_point):
     fig, ax = plt.subplots(figsize=(10, 7))
-    ax.set_xlim(0, 1)
-    ax.set_ylim(0, 1)
+    ax.set_xlim(0, 10)
+    ax.set_ylim(0, 10)
     ax.set_title("Movement of Model Point and Position of User and Expert Points")
     ax.set_xlabel("X-axis")
     ax.set_ylabel("Y-axis")
@@ -157,9 +153,9 @@ def get_shapley_values(user_points, expert_point):
         # iterate over all subsets without user
         for subset in all_subsets(all_users, exclude=[user]):
             # compute value of subset
-            subset_value = 1 / np.linalg.norm(np.mean(user_points[list(subset)], axis=0) - expert_point)
+            subset_value = -np.linalg.norm(np.mean(user_points[list(subset)], axis=0) - expert_point)
             # compute value of subset with user
-            subset_with_user_value = 1 / np.linalg.norm(np.mean(user_points[list(subset) + [user]], axis=0) - expert_point)
+            subset_with_user_value = -np.linalg.norm(np.mean(user_points[list(subset) + [user]], axis=0) - expert_point)
             # compute marginal contribution of user
             marginal_contribution = subset_with_user_value - subset_value
             # update user value
@@ -178,6 +174,12 @@ def weighted_centroid(points, weights):
     # Compute the total weight
     total_weight = np.sum(weights)
 
+    # normalize weights to sum to be between 0 and 1
+    if np.allclose(weights, weights[0]):
+        weights = np.ones(len(weights)) / len(weights)
+    else:
+        weights = (weights - np.min(weights)) / (np.max(weights) - np.min(weights))
+
     # If total weight is zero, return an error
     if total_weight == 0:
         raise ValueError("Total weight is zero, cannot compute centroid")
@@ -194,11 +196,11 @@ def simulation(model_point, expert_point, user_points, use_real_shapley: bool = 
     if use_real_shapley:
         shapley_values = get_shapley_values(user_points, expert_point)
         # normalize shapley values between 0 and 1
-        shapley_values = (shapley_values - np.min(shapley_values)) / (np.max(shapley_values) - np.min(shapley_values))
+        # shapley_values = (shapley_values - np.min(shapley_values)) / (np.max(shapley_values) - np.min(shapley_values))
     else:
         # shapley values start all equal
-        user_score = np.ones(len(user_points))
-        shapley_values = np.ones(len(user_points)) / len(user_points)
+        shapley_values = np.ones(len(user_points))
+        # shapley_values = np.ones(len(user_points)) / len(user_points)
 
     shapley_value_history: list = [shapley_values]
     for _ in range(NUM_OF_ROUNDS):
@@ -212,28 +214,22 @@ def simulation(model_point, expert_point, user_points, use_real_shapley: bool = 
         centroid_1 = weighted_centroid(user_points[user_group_1], shapley_values[user_group_1])
         centroid_2 = weighted_centroid(user_points[user_group_2], shapley_values[user_group_2])
 
-        # if not use_real_shapley, update shapley values based on winning group
-        # whichever groups centroid is closer to the expert point, update shapley values
-        if not use_real_shapley:
-            if np.linalg.norm(centroid_1 - expert_point) < np.linalg.norm(centroid_2 - expert_point):
-                user_score[user_group_1] += 1
-            else:
-                user_score[user_group_2] += 1
-            shapley_values = user_score / np.sum(user_score)
-            shapley_value_history.append(shapley_values)
-
         # create two candidate points, moving towards each centroid (use numpy) (by 10% of the distance)
-        d = 0.1
-        candidate_point_1 = model_point + d * (centroid_1 - model_point)
-        candidate_point_2 = model_point + d * (centroid_2 - model_point)
+        candidate_point_1 = model_point + DELTA * (centroid_1 - model_point)
+        candidate_point_2 = model_point + DELTA * (centroid_2 - model_point)
 
         # let new model point be the one closer to the expert point
-        if np.linalg.norm(candidate_point_1 - expert_point) < np.linalg.norm(candidate_point_2 - expert_point):
+        diff = np.linalg.norm(candidate_point_1 - expert_point) - np.linalg.norm(candidate_point_2 - expert_point)
+        if diff < 0:
             model_point = candidate_point_1
+            # if not use_real_shapley: # give user group 1 a point
+            #     shapley_values[user_group_1] += abs(diff)
         else:
             model_point = candidate_point_2
-        # model_point = update_model_point(model_point)
+            # if not use_real_shapley: # give user group 2 a point
+            #     shapley_values[user_group_2] += abs(diff)
         model_point_history.append(model_point)
+        shapley_value_history.append(deepcopy(shapley_values))
     
     return model_point_history, shapley_value_history
 
@@ -243,7 +239,6 @@ def test():
     user_points = np.array([[1, 2], [2, 1], [2, 2], [3, 3], [4, 4]])
     shapley_values = get_shapley_values(user_points, expert_point)
     normalized_shapley_values = (shapley_values - np.min(shapley_values)) / (np.max(shapley_values) - np.min(shapley_values))
-    print(shapley_values)
 
     group_1 = [0, 1, 2]
     group_2 = [3, 4]
@@ -280,11 +275,10 @@ def test():
 
 def main():
     model_point, expert_point, user_points = initialize_points(2)
-
-    model_point_history, _ = simulation(model_point, expert_point, user_points)
-    model_point_history_real, _ = simulation(model_point, expert_point, user_points, use_real_shapley=True)
-
+    model_point_history, _ = simulation(model_point, expert_point, user_points, use_real_shapley=False)
+    model_point_history_real, shapley_value_history = simulation(model_point, expert_point, user_points, use_real_shapley=True)
     animate_all_points_movement([model_point_history, model_point_history_real], user_points, expert_point)
+
 
 def multiple_dimension(dims: List[int] = [2**i for i in range(1, 7)]):
     rows_model = []
@@ -292,8 +286,23 @@ def multiple_dimension(dims: List[int] = [2**i for i in range(1, 7)]):
     for dim in dims:
         model_point, expert_point, user_points = initialize_points(dim)
         shapley_values = get_shapley_values(user_points, expert_point)
-        shapley_values = (shapley_values - np.min(shapley_values)) / (np.max(shapley_values) - np.min(shapley_values))
-        model_point_history, shapley_history = simulation(model_point, expert_point, user_points, use_real_shapley=False)
+        # shapley_values = (shapley_values - np.min(shapley_values)) / (np.max(shapley_values) - np.min(shapley_values))
+        model_point_history, shapley_history = simulation(
+            model_point, expert_point, user_points, use_real_shapley=False
+        )
+        
+        # scale shapley_history[-1] to be between min and max of shapley_values
+        scaled_last_shapley = (shapley_history[-1] - np.min(shapley_history[-1])) / (np.max(shapley_history[-1]) - np.min(shapley_history[-1]))
+        scaled_last_shapley = scaled_last_shapley * (np.max(shapley_values) - np.min(shapley_values)) + np.min(shapley_values)
+
+        # scale all
+        scaled_shapley_history = []
+        minval, maxval = np.min(shapley_values), np.max(shapley_values)
+        for i, shapley_round in enumerate(shapley_history):
+            scaled_shapley_round = (shapley_round - np.min(shapley_round)) / (np.max(shapley_round) - np.min(shapley_round))
+            scaled_shapley_round = scaled_shapley_round * (maxval - minval) + minval
+            scaled_shapley_history.append(scaled_shapley_round)
+        
         distances = np.array([
             np.linalg.norm(point - expert_point)
             for point in model_point_history
@@ -301,7 +310,7 @@ def multiple_dimension(dims: List[int] = [2**i for i in range(1, 7)]):
         for i, distance in enumerate(distances):
             rows_model.append([dim, i, distance])
 
-        for i, round_shapley_values in enumerate(shapley_history):
+        for i, round_shapley_values in enumerate(scaled_shapley_history):
             for agent_num, (shapley_value, real_shapley_value) in enumerate(zip(round_shapley_values, shapley_values)):
                 rows_shapley.append([dim, i, agent_num, shapley_value, real_shapley_value])
 
@@ -329,6 +338,4 @@ if __name__ == "__main__":
     # main()
     # test()
     multiple_dimension()
-    
 
-    
