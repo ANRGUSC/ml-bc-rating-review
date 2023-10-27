@@ -1,35 +1,79 @@
+import pathlib
+from copy import deepcopy
+from functools import partial
 from itertools import combinations
 from math import factorial
 from typing import Iterable, List, Tuple
+
 import matplotlib.pyplot as plt
-import random
-from matplotlib.animation import FuncAnimation
-from IPython.display import HTML
 import numpy as np
-import plotly.express as px
 import pandas as pd
-from copy import deepcopy
+import plotly.express as px
+from matplotlib.animation import FuncAnimation
 
-#TODO: Simulate it in multiple dimensions, track the distance to expert point over time (see if it converges)
-#TODO: Use estimated shapley values to compute weighted centroid of each group
-
-# Constants
-NUM_USER_POINTS = 10
-NUM_OF_ROUNDS = 100
-DELTA = 0.1
-EXPERT_POINT_SUBSET_SIZE = 5
+thisdir = pathlib.Path(__file__).parent.absolute()
 
 # Initialization
-def initialize_points(dimension):
+def initialize_points(dimension: int,
+                      num_user_points: int = 10,
+                      expert_point_subset_size: int = 3) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Initialize the model point, expert point, and user points.
+    
+    Args:
+        dimension: The dimension of the points.
+        num_user_points: The number of user points.
+        expert_point_subset_size: The number of user points to use to calculate the expert point.
+    Returns:
+        A tuple of the model point, expert point, and user points.
+    """
     model_point = np.random.uniform(0, 10, size= dimension)
-    user_points = np.random.uniform(0, 10, size=(NUM_USER_POINTS, dimension))
+    user_points = np.random.uniform(0, 10, size=(num_user_points, dimension))
 
     # expert point is centroid of random subset of user points
     users_shuffled = np.random.permutation(list(range(len(user_points))))
-    user_group = users_shuffled[:EXPERT_POINT_SUBSET_SIZE]
+    user_group = users_shuffled[:expert_point_subset_size]
     expert_point = np.mean(user_points[user_group], axis=0)
     
     return model_point, expert_point, user_points
+
+def initialize_points_farming(expert_point_subset_size: int,
+                              num_user_points: int = None) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    columns = [
+        "NewCrops",
+        "ImprovedSeeds",
+        "Fertilizers",
+        "Machinery",
+        "Credits",
+        "Storage",
+        "AcessMarkets",
+        "Post-harvest",
+        "InformationPrices",
+        "Pesticides",
+        "PlantingMethods",
+        "Irrigation",
+        "Herbicides",
+        "Dam",
+        "PrepareSoil",
+    ]
+    path = thisdir / "data/farming/pref.csv"
+    df_pref = pd.read_csv(path, encoding="utf-8")
+    df_pref = df_pref[columns]
+    if num_user_points is not None:
+        df_pref = df_pref.iloc[:num_user_points]
+
+    # each cell is a numeric value between 0 and 5
+    user_points = df_pref.to_numpy()
+    
+    # model point has same dimension but is drawn from uniform distribution
+    model_point = np.random.uniform(0, 5, size=len(columns))
+    
+    # expert point is centroid of random subset of user points
+    users_shuffled = np.random.permutation(list(range(len(user_points))))
+    user_group = users_shuffled[:expert_point_subset_size]
+    expert_point = np.mean(user_points[user_group], axis=0)
+
+    return model_point, expert_point, user_points
+    
 
 # Visualization
 def plot_all_points_movement(model_point_history, user_points, expert_point):
@@ -165,7 +209,23 @@ def weighted_centroid(points, weights):
 
     return C
 
-def simulation(model_point, expert_point, user_points, use_real_shapley: bool = False) -> Tuple[list, np.ndarray, np.ndarray, list]:
+def simulation(model_point: np.ndarray,
+               expert_point: np.ndarray,
+               user_points: np.ndarray,
+               num_of_rounds: int = 100,
+               delta: float = 0.1,
+               use_real_shapley: bool = False) -> Tuple[list, np.ndarray, np.ndarray, list]:
+    """Simulate the movement of the model point over rounds.
+
+    Args:
+        model_point: The initial model point.
+        expert_point: The expert point.
+        user_points: The user points.
+        use_real_shapley: Whether to use the real Shapley values or not.
+
+    Returns:
+        A tuple of the model point history, the Shapley value history, the centroid history, and the user point history.
+    """
     user_points = np.array(user_points)
     model_point_history = [model_point]
     if use_real_shapley:
@@ -174,7 +234,7 @@ def simulation(model_point, expert_point, user_points, use_real_shapley: bool = 
         shapley_values = np.ones(len(user_points))
 
     shapley_value_history: list = [shapley_values]
-    for _ in range(NUM_OF_ROUNDS):
+    for round_i in range(num_of_rounds):
         # split user points into two random groups (use permutation)
         users_shuffled = np.random.permutation(list(range(len(user_points))))
         user_group_1 = users_shuffled[:len(users_shuffled) // 2]
@@ -184,8 +244,8 @@ def simulation(model_point, expert_point, user_points, use_real_shapley: bool = 
         centroid_2 = weighted_centroid(user_points[user_group_2], shapley_values[user_group_2])
 
         # create two candidate points, moving towards each centroid (use numpy) (by DELTA % of the distance)
-        candidate_point_1 = model_point + DELTA * (centroid_1 - model_point)
-        candidate_point_2 = model_point + DELTA * (centroid_2 - model_point)
+        candidate_point_1 = model_point + delta * (centroid_1 - model_point)
+        candidate_point_2 = model_point + delta * (centroid_2 - model_point)
 
         # let new model point be the one closer to the expert point
         dist_1 = np.linalg.norm(candidate_point_1 - expert_point)
@@ -266,14 +326,14 @@ def multiple_dimension(dims: List[int] = [2**i for i in range(1, 7)]):
     for dim in dims:
         model_point, expert_point, user_points = initialize_points(dim)
         shapley_values = get_shapley_values(user_points, expert_point)
-        # shapley_values = (shapley_values - np.min(shapley_values)) / (np.max(shapley_values) - np.min(shapley_values))
+
         model_point_history, shapley_history = simulation(
             model_point, expert_point, user_points, use_real_shapley=False
         )
         
-        # scale shapley_history[-1] to be between min and max of shapley_values
-        scaled_last_shapley = (shapley_history[-1] - np.min(shapley_history[-1])) / (np.max(shapley_history[-1]) - np.min(shapley_history[-1]))
-        scaled_last_shapley = scaled_last_shapley * (np.max(shapley_values) - np.min(shapley_values)) + np.min(shapley_values)
+        # # scale shapley_history[-1] to be between min and max of shapley_values
+        # scaled_last_shapley = (shapley_history[-1] - np.min(shapley_history[-1])) / (np.max(shapley_history[-1]) - np.min(shapley_history[-1]))
+        # scaled_last_shapley = scaled_last_shapley * (np.max(shapley_values) - np.min(shapley_values)) + np.min(shapley_values)
 
         # scale all
         scaled_shapley_history = []
@@ -311,8 +371,59 @@ def multiple_dimension(dims: List[int] = [2**i for i in range(1, 7)]):
     fig.show()
     fig.write_image("shapley_error.png")
 
+def run_farming(do_shapley: bool = True):
+    model_point, expert_point, user_points = initialize_points_farming(
+        num_user_points=10,
+        expert_point_subset_size=3
+    )
+    model_point_history, shapley_history = simulation(
+        model_point, expert_point, user_points, use_real_shapley=False
+    )
+  
+    distances = np.array([
+        np.linalg.norm(point - expert_point)
+        for point in model_point_history
+    ])
+    rows_model = []
+    for i, distance in enumerate(distances):
+        rows_model.append([i, distance])
+
+    df_model = pd.DataFrame(rows_model, columns=["Round", "Distance"])
+    fig = px.line(
+        df_model, x="Round", y="Distance",
+        template="plotly_white", title="Distance to Expert Point over Time"
+    )
+    # make y-axis range from 0 to max distance
+    fig.update_yaxes(range=[0, np.max(distances)])
+    fig.write_image("distance.png")
+
+    if do_shapley:
+        shapley_values = get_shapley_values(user_points, expert_point)
+
+        # scale all
+        scaled_shapley_history = []
+        minval, maxval = np.min(shapley_values), np.max(shapley_values)
+        for i, shapley_round in enumerate(shapley_history):
+            scaled_shapley_round = (shapley_round - np.min(shapley_round)) / (np.max(shapley_round) - np.min(shapley_round))
+            scaled_shapley_round = scaled_shapley_round * (maxval - minval) + minval
+            scaled_shapley_history.append(scaled_shapley_round)
+      
+        rows_shapley = []
+        for i, round_shapley_values in enumerate(scaled_shapley_history):
+            for agent_num, (shapley_value, real_shapley_value) in enumerate(zip(round_shapley_values, shapley_values)):
+                rows_shapley.append([i, agent_num, shapley_value, real_shapley_value])
+
+        df_shapley = pd.DataFrame(rows_shapley, columns=["Round", "Agent", "Shapley Value", "Real Shapley Value"])
+        df_shapley['error'] = df_shapley['Shapley Value'] - df_shapley['Real Shapley Value']
+        fig = px.line(
+            df_shapley, x="Round", y="error", color="Agent",
+            template="plotly_white", title="Shapley Value Error over Time"
+        )
+        fig.write_image("shapley_error.png")
+
+
 if __name__ == "__main__":
     # main()
     # test()
-    multiple_dimension()
+    run_farming()
 
