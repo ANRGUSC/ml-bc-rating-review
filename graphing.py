@@ -73,8 +73,50 @@ def initialize_points_farming(expert_point_subset_size: int,
     expert_point = np.mean(user_points[user_group], axis=0)
 
     return model_point, expert_point, user_points
-    
 
+def initialize_points_movie(expert_point_subset_size: int,
+                              num_user_points: int = None) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    columns = [
+        "Action",
+        "Adventure",
+        "Animation",
+        "Children",
+        "Comedy",
+        "Crime",
+        "Documentary",
+        "Drama",
+        "Fantasy",
+        "Film-Noir",
+        "Horror",
+        "IMAX",
+        "Musical",
+        "Mystery",
+        "Romance",
+        "Sci-Fi",
+        "Thriller",
+        "War",
+        "Western"
+        
+    ]
+    path = thisdir / "data/movielens/user_genre_pivot.csv"
+    df_pref = pd.read_csv(path, encoding="utf-8")
+    df_pref = df_pref[columns]
+    if num_user_points is not None:
+        df_pref = df_pref.iloc[:num_user_points]
+
+    # each cell is a numeric value between 0 and 5
+    user_points = df_pref.to_numpy()
+    
+    # model point has same dimension but is drawn from uniform distribution
+    model_point = np.random.uniform(0, 5, size=len(columns))
+    
+    # expert point is centroid of random subset of user points
+    users_shuffled = np.random.permutation(list(range(len(user_points))))
+    user_group = users_shuffled[:expert_point_subset_size]
+    expert_point = np.mean(user_points[user_group], axis=0)
+
+    return model_point, expert_point, user_points
+    
 # Visualization
 def plot_all_points_movement(model_point_history, user_points, expert_point):
     """Plot the movement of the model point, user points, and expert point over rounds."""
@@ -308,7 +350,6 @@ def test():
     plt.grid(True)
     plt.show()
 
-
 def main():
     model_point, expert_point, user_points = initialize_points(2)
     model_point_history, _ = simulation(model_point, expert_point, user_points, use_real_shapley=False)
@@ -318,7 +359,6 @@ def main():
         user_points, expert_point,
         colors=['purple', 'orange'],
     )
-
 
 def multiple_dimension(dims: List[int] = [2**i for i in range(1, 7)]):
     rows_model = []
@@ -371,6 +411,55 @@ def multiple_dimension(dims: List[int] = [2**i for i in range(1, 7)]):
     fig.show()
     fig.write_image("shapley_error.png")
 
+def run_movie(do_shapley: bool = True):
+    model_point, expert_point, user_points = initialize_points_movie(
+        num_user_points=10,
+        expert_point_subset_size=3
+    )
+    model_point_history, shapley_history = simulation(
+        model_point, expert_point, user_points, use_real_shapley=False
+    )
+  
+    distances = np.array([
+        np.linalg.norm(point - expert_point)
+        for point in model_point_history
+    ])
+    rows_model = []
+    for i, distance in enumerate(distances):
+        rows_model.append([i, distance])
+
+    df_model = pd.DataFrame(rows_model, columns=["Round", "Distance"])
+    fig = px.line(
+        df_model, x="Round", y="Distance",
+        template="plotly_white", title="Distance to Expert Point over Time"
+    )
+    # make y-axis range from 0 to max distance
+    fig.update_yaxes(range=[0, np.max(distances)])
+    fig.write_image("distance.png")
+
+    if do_shapley:
+        shapley_values = get_shapley_values(user_points, expert_point)
+
+        # scale all
+        scaled_shapley_history = []
+        minval, maxval = np.min(shapley_values), np.max(shapley_values)
+        for i, shapley_round in enumerate(shapley_history):
+            scaled_shapley_round = (shapley_round - np.min(shapley_round)) / (np.max(shapley_round) - np.min(shapley_round))
+            scaled_shapley_round = scaled_shapley_round * (maxval - minval) + minval
+            scaled_shapley_history.append(scaled_shapley_round)
+      
+        rows_shapley = []
+        for i, round_shapley_values in enumerate(scaled_shapley_history):
+            for agent_num, (shapley_value, real_shapley_value) in enumerate(zip(round_shapley_values, shapley_values)):
+                rows_shapley.append([i, agent_num, shapley_value, real_shapley_value])
+
+        df_shapley = pd.DataFrame(rows_shapley, columns=["Round", "Agent", "Shapley Value", "Real Shapley Value"])
+        df_shapley['error'] = df_shapley['Shapley Value'] - df_shapley['Real Shapley Value']
+        fig = px.line(
+            df_shapley, x="Round", y="error", color="Agent",
+            template="plotly_white", title="Shapley Value Error over Time"
+        )
+        fig.write_image("shapley_error.png")
 def run_farming(do_shapley: bool = True):
     model_point, expert_point, user_points = initialize_points_farming(
         num_user_points=10,
@@ -425,5 +514,6 @@ def run_farming(do_shapley: bool = True):
 if __name__ == "__main__":
     # main()
     # test()
-    run_farming()
+    # run_farming()
+    run_movie()
 
