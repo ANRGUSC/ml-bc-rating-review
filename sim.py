@@ -197,19 +197,23 @@ def main():
         ]
         return candidate_points
     
-    def norm_sig(x: np.ndarray) -> np.ndarray:
+    def norm_sig(x: np.ndarray, a: float = 10.0) -> np.ndarray:
         # normalize x to be between 0 and 1
         if np.allclose(x, x[0]):
             x = np.ones(len(x)) / len(x)
         else:
             x = (x - np.min(x)) / (np.max(x) - np.min(x))
-        weights = 1 / (1 + np.exp(10*(-x + 1/2)))
+        weights = 1 / (1 + np.exp(a*(-x + 1/2)))
         return weights
 
     next_points_funcs = {
-        'score_sigmoid': partial(weighted_next_points, weight=norm_sig),
-        'score': partial(weighted_next_points, weight=lambda x: x),
-        'score_squared': partial(weighted_next_points, weight=lambda x: x**2),
+        'score_sigmoid_1': partial(weighted_next_points, weight=partial(norm_sig, a=1.0)),
+        'score_sigmoid_5': partial(weighted_next_points, weight=partial(norm_sig, a=5.0)),
+        'score_sigmoid_10': partial(weighted_next_points, weight=partial(norm_sig, a=10.0)),
+        'score_sigmoid_25': partial(weighted_next_points, weight=partial(norm_sig, a=25.0)),
+        'score_sigmoid_50': partial(weighted_next_points, weight=partial(norm_sig, a=50.0)),
+        # 'score': partial(weighted_next_points, weight=lambda x: x),
+        # 'score_squared': partial(weighted_next_points, weight=lambda x: x**2),
     }
 
     modes = {
@@ -223,11 +227,11 @@ def main():
         # }
     }
 
-    num_runs = 10
+    num_runs = 20
     rows = []
     for group_func_name, group_func in group_funcs.items():
         for next_points_func_name, next_points_func in next_points_funcs.items():
-            model_point, expert_point, user_points = init_points_movie(expert_point_subset_size=3, num_user_points=10)
+            model_point, expert_point, user_points = init_points_movie(expert_point_subset_size=3, num_user_points=None)
             problem = ProblemInstance(model_point, expert_point, user_points)
             for mode, mode_kwargs in modes.items():
                 for run_i in range(1, num_runs+1):

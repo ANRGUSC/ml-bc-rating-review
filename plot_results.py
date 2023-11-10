@@ -31,6 +31,7 @@ def main():
         y='improvement',
         # color='mode',
         facet_col='next_points_func',
+        facet_col_wrap=2,
         template='plotly_white',
         # color='group_func',
     )

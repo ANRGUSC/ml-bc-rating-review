@@ -3,7 +3,8 @@ from copy import deepcopy
 from functools import partial
 from itertools import combinations
 from math import factorial
-from typing import Iterable, List, Tuple
+import random
+from typing import Dict, Iterable, List, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -13,12 +14,12 @@ from matplotlib.animation import FuncAnimation
 
 thisdir = pathlib.Path(__file__).parent.absolute()
 
-# Initialization
-def initialize_points(dimension: int,
-                      num_user_points: int = 10,
-                      expert_point_subset_size: int = 3) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+# Initialization Functions
+def init_points_uniform(dimension: int,
+                        num_user_points: int = 10,
+                        expert_point_subset_size: int = 3) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     """Initialize the model point, expert point, and user points.
-    
+
     Args:
         dimension: The dimension of the points.
         num_user_points: The number of user points.
@@ -33,40 +34,34 @@ def initialize_points(dimension: int,
     users_shuffled = np.random.permutation(list(range(len(user_points))))
     user_group = users_shuffled[:expert_point_subset_size]
     expert_point = np.mean(user_points[user_group], axis=0)
-    
+
     return model_point, expert_point, user_points
 
-def initialize_points_farming(expert_point_subset_size: int,
-                              num_user_points: int = None) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
-    columns = [
-        "NewCrops",
-        "ImprovedSeeds",
-        "Fertilizers",
-        "Machinery",
-        "Credits",
-        "Storage",
-        "AcessMarkets",
-        "Post-harvest",
-        "InformationPrices",
-        "Pesticides",
-        "PlantingMethods",
-        "Irrigation",
-        "Herbicides",
-        "Dam",
-        "PrepareSoil",
-    ]
-    path = thisdir / "data/farming/pref.csv"
-    df_pref = pd.read_csv(path, encoding="utf-8")
-    df_pref = df_pref[columns]
+def init_points_movie(expert_point_subset_size: int,
+                      num_user_points: int = None) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Initialize the model point, expert point, and user points.
+    
+    Args:
+        expert_point_subset_size: The number of user points to use to calculate the expert point.
+        num_user_points: The number of user points to use.
+
+    Returns:
+        A tuple of the model point, expert point, and user points.
+    """
+    path = thisdir / "data/movielens/user_genre_pivot_mean.csv"
+    df_pref = pd.read_csv(path, encoding="utf-8", index_col=0)
+    df_pref = df_pref[df_pref.columns[1:]]
+
+    # df_pref = df_pref[columns]
     if num_user_points is not None:
         df_pref = df_pref.iloc[:num_user_points]
 
     # each cell is a numeric value between 0 and 5
     user_points = df_pref.to_numpy()
-    
-    # model point has same dimension but is drawn from uniform distribution
-    model_point = np.random.uniform(0, 5, size=len(columns))
-    
+
+    # initial model point has same dimension but is drawn from uniform distribution
+    model_point = np.random.uniform(0, 5, size=len(df_pref.columns))
+
     # expert point is centroid of random subset of user points
     users_shuffled = np.random.permutation(list(range(len(user_points))))
     user_group = users_shuffled[:expert_point_subset_size]
@@ -74,78 +69,20 @@ def initialize_points_farming(expert_point_subset_size: int,
 
     return model_point, expert_point, user_points
 
-def initialize_points_movie(expert_point_subset_size: int,
-                              num_user_points: int = None) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
-    columns = [
-        "Action",
-        "Adventure",
-        "Animation",
-        "Children",
-        "Comedy",
-        "Crime",
-        "Documentary",
-        "Drama",
-        "Fantasy",
-        "Film-Noir",
-        "Horror",
-        "IMAX",
-        "Musical",
-        "Mystery",
-        "Romance",
-        "Sci-Fi",
-        "Thriller",
-        "War",
-        "Western"
-        
-    ]
-    path = thisdir / "data/movielens/user_genre_pivot.csv"
-    df_pref = pd.read_csv(path, encoding="utf-8")
-    df_pref = df_pref[columns]
-    if num_user_points is not None:
-        df_pref = df_pref.iloc[:num_user_points]
+def animate(model_point_histories: List[List[np.ndarray]],
+            user_points: np.ndarray,
+            expert_point: np.ndarray,
+            colors: List[str] = None) -> None:
+    """Animate the movement of the model point over rounds.
 
-    # each cell is a numeric value between 0 and 5
-    user_points = df_pref.to_numpy()
-    
-    # model point has same dimension but is drawn from uniform distribution
-    model_point = np.random.uniform(0, 5, size=len(columns))
-    
-    # expert point is centroid of random subset of user points
-    users_shuffled = np.random.permutation(list(range(len(user_points))))
-    user_group = users_shuffled[:expert_point_subset_size]
-    expert_point = np.mean(user_points[user_group], axis=0)
-
-    return model_point, expert_point, user_points
-    
-# Visualization
-def plot_all_points_movement(model_point_history, user_points, expert_point):
-    """Plot the movement of the model point, user points, and expert point over rounds."""
-    plt.figure(figsize=(10, 7))
-    
-    # Plot movement of model point
-    xs = [point[0] for point in model_point_history]
-    ys = [point[1] for point in model_point_history]
-    rounds = [point[2] for point in model_point_history]
-    plt.scatter(xs, ys, c=rounds, cmap='viridis', s=100, alpha=0.8, label="Model Point")
-    plt.plot(xs, ys, '-o', alpha=0.6)
-    
-    # Plot user points
-    user_xs = [point[0] for point in user_points]
-    user_ys = [point[1] for point in user_points]
-    plt.scatter(user_xs, user_ys, c='blue', s=100, alpha=0.6, label='User Points')
-    
-    # Plot expert point
-    plt.scatter(*expert_point, c='green', s=150, alpha=0.8, marker='*', label='Expert Point')
-    
-    plt.colorbar().set_label('Round Number for Model Point')
-    plt.title("Movement of Model Point and Position of User and Expert Points")
-    plt.xlabel("X-axis")
-    plt.ylabel("Y-axis")
-    plt.legend()
-    plt.grid(True)
-    plt.show()
-
-def animate_all_points_movement(model_point_histories, user_points, expert_point, colors=None):
+    Args:
+        model_point_histories: A list of model point histories.
+        user_points: The user points.
+        expert_point: The expert point.
+        colors: The colors of the model points.
+    """
+    fig: plt.Figure
+    ax: plt.Axes
     fig, ax = plt.subplots(figsize=(10, 7))
     ax.set_xlim(0, 10)
     ax.set_ylim(0, 10)
@@ -161,10 +98,10 @@ def animate_all_points_movement(model_point_histories, user_points, expert_point
     ax.scatter(*expert_point, c='green', s=150, alpha=0.8, marker='*', label='Expert Point')
 
     # Model point's trace and current position
-    all_xs = {}
-    all_ys = {}
-    lines = {}
-    points = {}
+    all_xs: Dict[int, List[float]] = {}
+    all_ys: Dict[int, List[float]] = {}
+    lines: Dict[int, plt.Line2D] = {}
+    points: Dict[int, plt.Line2D] = {}
     for i, model_point_history in enumerate(model_point_histories):
         all_xs[i] = [point[0] for point in model_point_history]
         all_ys[i] = [point[1] for point in model_point_history]
@@ -191,21 +128,37 @@ def animate_all_points_movement(model_point_histories, user_points, expert_point
             point.set_data([xs[frame]], [ys[frame]])  # Wrap values in a list
         return *lines.values(), *points.values()
 
-    ani = FuncAnimation(fig, update, frames=NUM_OF_ROUNDS, init_func=init, blit=True, repeat=False)
+    num_rounds = len(model_point_histories[0])
+    ani = FuncAnimation(fig, update, frames=num_rounds, init_func=init, blit=True, repeat=False)
     plt.show()
 
 def all_subsets(elements: Iterable, exclude: Iterable = []) -> Iterable:
-    """Returns all subsets (of length > 0) of elements excluding those in exclude"""
-    # yield empty set
+    """Returns all subsets (of length > 0) of elements excluding those in exclude
+    
+    Args:
+        elements: The elements to get subsets of.
+        exclude: The elements to exclude.
+
+    Returns:
+        A generator of all subsets of elements excluding those in exclude.
+    """
     for i in range(1, len(elements) + 1):
         for subset in combinations(elements, i):
             if not any(x in subset for x in exclude):
                 yield subset
 
-def get_shapley_values(user_points, expert_point):
+def get_shapley_values(user_points: np.ndarray,
+                       expert_point: np.ndarray) -> np.ndarray:
     """Calculate the Shapley values for each user point.
-    
+
     The coalition value function is the 1/distance of the centroid of the coalition to the expert point.
+
+    Args:
+        user_points: The user points.
+        expert_point: The expert point.
+
+    Returns:
+        The Shapley values for each user point.
     """
     num_users = len(user_points)
     all_users = list(range(num_users))
@@ -225,10 +178,22 @@ def get_shapley_values(user_points, expert_point):
             shapley_values[user] += weight * marginal_contribution
     return shapley_values
 
-def weighted_centroid(points, weights):
+def weighted_centroid(points: np.ndarray,
+                      weights: np.ndarray) -> np.ndarray:
+    """Compute the weighted centroid of a set of points.
+
+    Args:
+        points: The points.
+        weights: The weights.
+
+    Returns:
+        The weighted centroid of the points.
+    """
     # Check if the length of points and weights are the same
     if len(points) != len(weights):
         raise ValueError("Points and weights arrays must have the same length")
+
+    weights = weights**2
 
     # Compute the sum of weighted coordinates
     total_weighted_coords = np.sum(points * weights[:, np.newaxis], axis=0)
@@ -256,7 +221,8 @@ def simulation(model_point: np.ndarray,
                user_points: np.ndarray,
                num_of_rounds: int = 100,
                delta: float = 0.1,
-               use_real_shapley: bool = False) -> Tuple[list, np.ndarray, np.ndarray, list]:
+               use_real_shapley: bool = False,
+               do_estimation: bool = True) -> Tuple[list, np.ndarray, np.ndarray, list]:
     """Simulate the movement of the model point over rounds.
 
     Args:
@@ -278,7 +244,12 @@ def simulation(model_point: np.ndarray,
     shapley_value_history: list = [shapley_values]
     for round_i in range(num_of_rounds):
         # split user points into two random groups (use permutation)
-        users_shuffled = np.random.permutation(list(range(len(user_points))))
+        if random.random() < 0.1:
+            # sort users by their shapley values
+            users_shuffled = np.argsort(shapley_values)
+        else:
+            users_shuffled = np.random.permutation(list(range(len(user_points))))
+
         user_group_1 = users_shuffled[:len(users_shuffled) // 2]
         user_group_2 = users_shuffled[len(users_shuffled) // 2:]
 
@@ -294,21 +265,21 @@ def simulation(model_point: np.ndarray,
         dist_2 = np.linalg.norm(candidate_point_2 - expert_point)
         dist_cur = np.linalg.norm(model_point - expert_point)
         diff = np.linalg.norm(candidate_point_1 - expert_point) - np.linalg.norm(candidate_point_2 - expert_point)
-        if dist_cur < dist_1 and dist_cur < dist_2: 
+        if dist_cur < dist_1 and dist_cur < dist_2:
             # both points are further from expert point than current model point
             # don't update model point
             pass
         elif dist_1 < dist_2:
             model_point = candidate_point_1
-            if not use_real_shapley: # give user group 1 a point
+            if do_estimation and not use_real_shapley: # give user group 1 a point
                 shapley_values[user_group_1] += 1
         else:
             model_point = candidate_point_2
-            if not use_real_shapley: # give user group 2 a point
+            if do_estimation and not use_real_shapley: # give user group 2 a point
                 shapley_values[user_group_2] += 1
         model_point_history.append(model_point)
         shapley_value_history.append(deepcopy(shapley_values))
-    
+
     return model_point_history, shapley_value_history
 
 def test():
@@ -351,108 +322,86 @@ def test():
     plt.show()
 
 def main():
-    model_point, expert_point, user_points = initialize_points(2)
+    model_point, expert_point, user_points = init_points_uniform(2)
     model_point_history, _ = simulation(model_point, expert_point, user_points, use_real_shapley=False)
     model_point_history_real, shapley_value_history = simulation(model_point, expert_point, user_points, use_real_shapley=True)
-    animate_all_points_movement(
+    animate(
         [model_point_history, model_point_history_real],
         user_points, expert_point,
         colors=['purple', 'orange'],
     )
 
-def multiple_dimension(dims: List[int] = [2**i for i in range(1, 7)]):
+def run_movie(num_users: int,
+              num_experts: int,
+              do_shapley: bool = True,
+              num_runs: int = 1):
     rows_model = []
     rows_shapley = []
-    for dim in dims:
-        model_point, expert_point, user_points = initialize_points(dim)
-        shapley_values = get_shapley_values(user_points, expert_point)
-
-        model_point_history, shapley_history = simulation(
-            model_point, expert_point, user_points, use_real_shapley=False
+    for run_i in range(num_runs):
+        init_model_point, init_expert_point, init_user_points = init_points_movie(
+            num_user_points=num_users,
+            expert_point_subset_size=num_experts
         )
-        
-        # # scale shapley_history[-1] to be between min and max of shapley_values
-        # scaled_last_shapley = (shapley_history[-1] - np.min(shapley_history[-1])) / (np.max(shapley_history[-1]) - np.min(shapley_history[-1]))
-        # scaled_last_shapley = scaled_last_shapley * (np.max(shapley_values) - np.min(shapley_values)) + np.min(shapley_values)
+        modes = {
+            'est': {'use_real_shapley': False, 'do_estimation': True},
+            'no_est': {'use_real_shapley': False, 'do_estimation': False},
+            'real': {'use_real_shapley': True, 'do_estimation': False},
+        }
+        for mode in modes:
+            model_point = deepcopy(init_model_point)
+            expert_point = deepcopy(init_expert_point)
+            user_points = deepcopy(init_user_points)
+            model_point_history, shapley_history = simulation(
+                model_point, expert_point, user_points,
+                **modes[mode]
+            )
 
-        # scale all
-        scaled_shapley_history = []
-        minval, maxval = np.min(shapley_values), np.max(shapley_values)
-        for i, shapley_round in enumerate(shapley_history):
-            scaled_shapley_round = (shapley_round - np.min(shapley_round)) / (np.max(shapley_round) - np.min(shapley_round))
-            scaled_shapley_round = scaled_shapley_round * (maxval - minval) + minval
-            scaled_shapley_history.append(scaled_shapley_round)
-        
-        distances = np.array([
-            np.linalg.norm(point - expert_point)
-            for point in model_point_history
-        ])
-        for i, distance in enumerate(distances):
-            rows_model.append([dim, i, distance])
+            distances = np.array([
+                np.linalg.norm(point - expert_point)
+                for point in model_point_history
+            ])
+            # rows_model = []
+            for i, distance in enumerate(distances):
+                rows_model.append([run_i, mode, i, distance])
 
-        for i, round_shapley_values in enumerate(scaled_shapley_history):
-            for agent_num, (shapley_value, real_shapley_value) in enumerate(zip(round_shapley_values, shapley_values)):
-                rows_shapley.append([dim, i, agent_num, shapley_value, real_shapley_value])
+            if do_shapley:
+                shapley_values = get_shapley_values(user_points, expert_point)
 
-    df_model = pd.DataFrame(rows_model, columns=["Dimensions", "Round", "Distance"])
+                # scale all
+                scaled_shapley_history = []
+                minval, maxval = np.min(shapley_values), np.max(shapley_values)
+                for i, shapley_round in enumerate(shapley_history):
+                    scaled_shapley_round = (shapley_round - np.min(shapley_round)) / (np.max(shapley_round) - np.min(shapley_round))
+                    scaled_shapley_round = scaled_shapley_round * (maxval - minval) + minval
+                    scaled_shapley_history.append(scaled_shapley_round)
+
+                # rows_shapley = []
+                for i, round_shapley_values in enumerate(scaled_shapley_history):
+                    for agent_num, (shapley_value, real_shapley_value) in enumerate(zip(round_shapley_values, shapley_values)):
+                        rows_shapley.append([run_i, mode, i, agent_num, shapley_value, real_shapley_value])
+
+
+    df_model = pd.DataFrame(rows_model, columns=["Run", "Mode", "Round", "Distance"])
+
+    # make Distance_est, Distance_no_est, Distance_real columns in df_summary
+    df_summary = df_model.pivot(index=["Run", "Round"], columns="Mode", values="Distance")
+    df_summary = df_summary.reset_index()
+    df_summary_final = df_summary[df_summary['Round'] == 100].drop(columns=['Round'])
+    df_summary_final['cr_est'] = df_summary_final['est'] / df_summary_final['real']
+    df_summary_final['cr_no_est'] = df_summary_final['no_est'] / df_summary_final['real']
+    print(df_summary_final.to_string())
+
     fig = px.line(
-        df_model, x="Round", y="Distance", color="Dimensions",
+        df_model, x="Round", y="Distance", color="Run", line_dash="Mode",
         template="plotly_white", title="Distance to Expert Point over Time"
     )
-    fig.show()
-    fig.write_image("distance.png")
 
-    df_shapley = pd.DataFrame(rows_shapley, columns=["Dimensions", "Round", "Agent", "Shapley Value", "Real Shapley Value"])
-    df_shapley['error'] = df_shapley['Shapley Value'] - df_shapley['Real Shapley Value']
-    fig = px.line(
-        df_shapley, x="Round", y="error", color="Agent", facet_col="Dimensions", facet_col_wrap=3,
-        template="plotly_white", title="Shapley Value Error over Time"
-    )
-    fig.show()
-    fig.write_image("shapley_error.png")
 
-def run_movie(do_shapley: bool = True):
-    model_point, expert_point, user_points = initialize_points_movie(
-        num_user_points=10,
-        expert_point_subset_size=3
-    )
-    model_point_history, shapley_history = simulation(
-        model_point, expert_point, user_points, use_real_shapley=False
-    )
-  
-    distances = np.array([
-        np.linalg.norm(point - expert_point)
-        for point in model_point_history
-    ])
-    rows_model = []
-    for i, distance in enumerate(distances):
-        rows_model.append([i, distance])
 
-    df_model = pd.DataFrame(rows_model, columns=["Round", "Distance"])
-    fig = px.line(
-        df_model, x="Round", y="Distance",
-        template="plotly_white", title="Distance to Expert Point over Time"
-    )
-    # make y-axis range from 0 to max distance
-    fig.update_yaxes(range=[0, np.max(distances)])
-    fig.write_image("distance.png")
+    df_model = df_model.melt(id_vars=["Run", "Mode", "Round"], value_vars=["Distance"])
+    print(df_model)
 
-    if do_shapley:
-        shapley_values = get_shapley_values(user_points, expert_point)
-
-        # scale all
-        scaled_shapley_history = []
-        minval, maxval = np.min(shapley_values), np.max(shapley_values)
-        for i, shapley_round in enumerate(shapley_history):
-            scaled_shapley_round = (shapley_round - np.min(shapley_round)) / (np.max(shapley_round) - np.min(shapley_round))
-            scaled_shapley_round = scaled_shapley_round * (maxval - minval) + minval
-            scaled_shapley_history.append(scaled_shapley_round)
-      
-        rows_shapley = []
-        for i, round_shapley_values in enumerate(scaled_shapley_history):
-            for agent_num, (shapley_value, real_shapley_value) in enumerate(zip(round_shapley_values, shapley_values)):
-                rows_shapley.append([i, agent_num, shapley_value, real_shapley_value])
-
+    if rows_shapley:
         df_shapley = pd.DataFrame(rows_shapley, columns=["Round", "Agent", "Shapley Value", "Real Shapley Value"])
         df_shapley['error'] = df_shapley['Shapley Value'] - df_shapley['Real Shapley Value']
         fig = px.line(
@@ -460,15 +409,16 @@ def run_movie(do_shapley: bool = True):
             template="plotly_white", title="Shapley Value Error over Time"
         )
         fig.write_image("shapley_error.png")
+
 def run_farming(do_shapley: bool = True):
-    model_point, expert_point, user_points = initialize_points_farming(
+    model_point, expert_point, user_points = init_points_farming(
         num_user_points=10,
         expert_point_subset_size=3
     )
     model_point_history, shapley_history = simulation(
         model_point, expert_point, user_points, use_real_shapley=False
     )
-  
+
     distances = np.array([
         np.linalg.norm(point - expert_point)
         for point in model_point_history
@@ -485,6 +435,7 @@ def run_farming(do_shapley: bool = True):
     # make y-axis range from 0 to max distance
     fig.update_yaxes(range=[0, np.max(distances)])
     fig.write_image("distance.png")
+    fig.write_html("distance.html")
 
     if do_shapley:
         shapley_values = get_shapley_values(user_points, expert_point)
@@ -496,7 +447,7 @@ def run_farming(do_shapley: bool = True):
             scaled_shapley_round = (shapley_round - np.min(shapley_round)) / (np.max(shapley_round) - np.min(shapley_round))
             scaled_shapley_round = scaled_shapley_round * (maxval - minval) + minval
             scaled_shapley_history.append(scaled_shapley_round)
-      
+
         rows_shapley = []
         for i, round_shapley_values in enumerate(scaled_shapley_history):
             for agent_num, (shapley_value, real_shapley_value) in enumerate(zip(round_shapley_values, shapley_values)):
@@ -515,5 +466,5 @@ if __name__ == "__main__":
     # main()
     # test()
     # run_farming()
-    run_movie()
+    run_movie(num_users=10, num_experts=1, do_shapley=False, num_runs=20)
 

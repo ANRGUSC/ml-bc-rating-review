@@ -20,19 +20,15 @@ movies_exploded_df = movies_df.explode('genres')
 merged_df = pd.merge(ratings_df, movies_exploded_df, on='movieId')
 
 # Group by userId and genres and calculate the average rating
-user_genre_rating = merged_df.groupby(['userId', 'genres']).rating.mean().reset_index()
+user_genre_rating_mean = merged_df.groupby(['userId', 'genres']).rating.mean().reset_index()
+user_genre_pivot_mean = user_genre_rating_mean.pivot(index='userId', columns='genres', values='rating')
+user_genre_pivot_mean = user_genre_pivot_mean.fillna(0)
+user_genre_pivot_mean.to_csv(thisdir / 'data/movielens/user_genre_pivot_mean.csv')
 
-# Pivot the table to have genres as columns and users as rows with their average rating for that genre
-user_genre_pivot = user_genre_rating.pivot(index='userId', columns='genres', values='rating')
-
-# Fill the missing values with 0
-user_genre_pivot = user_genre_pivot.fillna(0)
-
-print(user_genre_pivot.head())
-
-# Save the user_genre_pivot dataframe to a csv file
-user_genre_pivot.to_csv(thisdir / 'data/movielens/user_genre_pivot.csv')
-
+user_genre_pivot_std = merged_df.groupby(['userId', 'genres']).rating.std().reset_index()
+user_genre_pivot_std = user_genre_pivot_std.pivot(index='userId', columns='genres', values='rating')
+user_genre_pivot_std = user_genre_pivot_std.fillna(0)
+user_genre_pivot_std.to_csv(thisdir / 'data/movielens/user_genre_pivot_std.csv')
 
 
 
