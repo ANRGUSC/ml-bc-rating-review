@@ -28,6 +28,14 @@ user_genre_pivot = user_genre_rating.pivot(index='userId', columns='genres', val
 # Fill the missing values with 0
 user_genre_pivot = user_genre_pivot.fillna(0)
 
+# Calculate the mean and standard deviation for each genre
+mean_ratings = user_genre_pivot.mean()
+std_dev_ratings = user_genre_pivot.std()
+
+# Append these as new rows to the DataFrame
+user_genre_pivot.loc['Mean'] = mean_ratings
+user_genre_pivot.loc['Standard Deviation'] = std_dev_ratings
+
 print(user_genre_pivot.head())
 
 # Save the user_genre_pivot dataframe to a csv file
