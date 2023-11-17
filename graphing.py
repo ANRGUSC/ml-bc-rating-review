@@ -37,6 +37,7 @@ def init_points_uniform(dimension: int,
 
     return model_point, expert_point, user_points
 
+
 def init_points_movie(expert_point_subset_size: int,
                       num_user_points: int = None) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     """Initialize the model point, expert point, and user points.
@@ -48,16 +49,40 @@ def init_points_movie(expert_point_subset_size: int,
     Returns:
         A tuple of the model point, expert point, and user points.
     """
-    path = thisdir / "data/movielens/user_genre_pivot_mean.csv"
+    path = thisdir / "data/movielens/user_genre_pivot.csv"
     df_pref = pd.read_csv(path, encoding="utf-8", index_col=0)
-    df_pref = df_pref[df_pref.columns[1:]]
 
-    # df_pref = df_pref[columns]
+    path = thisdir / "data/movielens/user_genre_pivot_std.csv"
+    df_std = pd.read_csv(path, encoding="utf-8", index_col=0)
+
+    path = thisdir / "data/movielens/user_genre_pivot_mean.csv"
+    df_mean = pd.read_csv(path, encoding="utf-8", index_col=0)
+
+    if df_pref.shape != df_std.shape or df_pref.shape != df_mean.shape:
+        raise ValueError("DataFrames do not have matching dimensions")
+
     if num_user_points is not None:
         df_pref = df_pref.iloc[:num_user_points]
+        df_mean = df_mean.iloc[:num_user_points]
+        df_std = df_std.iloc[:num_user_points]
 
-    # each cell is a numeric value between 0 and 5
-    user_points = df_pref.to_numpy()
+    user_points = np.zeros(df_pref.shape)
+    for i in range(df_pref.shape[0]):
+        for j in range(df_pref.shape[1]):
+            user_points[i, j] = np.random.normal(df_mean.iloc[i, j], df_std.iloc[i, j])
+
+    model_point = np.random.uniform(0, 5, size=df_pref.shape[1])
+
+    users_shuffled = np.random.permutation(user_points.shape[0])
+    user_group = users_shuffled[:expert_point_subset_size]
+    expert_point = np.mean(user_points[user_group], axis=0)
+
+    return model_point, expert_point, user_points
+
+    
+    
+
+
 
     # initial model point has same dimension but is drawn from uniform distribution
     model_point = np.random.uniform(0, 5, size=len(df_pref.columns))
@@ -68,6 +93,44 @@ def init_points_movie(expert_point_subset_size: int,
     expert_point = np.mean(user_points[user_group], axis=0)
 
     return model_point, expert_point, user_points
+
+def update_points_movie(
+                      num_user_points: int = None) -> np.ndarray:
+    """Initialize the model point, expert point, and user points.
+    
+    Args:
+        expert_point_subset_size: The number of user points to use to calculate the expert point.
+        num_user_points: The number of user points to use.
+
+    Returns:
+        A tuple of the model point, expert point, and user points.
+    """
+    path = thisdir / "data/movielens/user_genre_pivot.csv"
+    df_pref = pd.read_csv(path, encoding="utf-8", index_col=0)
+
+    path = thisdir / "data/movielens/user_genre_pivot_std.csv"
+    df_std = pd.read_csv(path, encoding="utf-8", index_col=0)
+
+    path = thisdir / "data/movielens/user_genre_pivot_mean.csv"
+    df_mean = pd.read_csv(path, encoding="utf-8", index_col=0)
+
+    if df_pref.shape != df_std.shape or df_pref.shape != df_mean.shape:
+        raise ValueError("DataFrames do not have matching dimensions")
+
+    if num_user_points is not None:
+        df_pref = df_pref.iloc[:num_user_points]
+        df_mean = df_mean.iloc[:num_user_points]
+        df_std = df_std.iloc[:num_user_points]
+
+    user_points = np.zeros(df_pref.shape)
+    for i in range(df_pref.shape[0]):
+        for j in range(df_pref.shape[1]):
+            user_points[i, j] = np.random.normal(df_mean.iloc[i, j], df_std.iloc[i, j])
+
+
+
+    return user_points
+
 
 def animate(model_point_histories: List[List[np.ndarray]],
             user_points: np.ndarray,

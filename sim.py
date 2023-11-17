@@ -145,7 +145,7 @@ class Simulator:
     
 
 def main():
-    from graphing import init_points_movie, init_points_uniform, animate, get_shapley_values
+    from graphing import init_points_movie, update_points_movie, init_points_uniform, animate, get_shapley_values
 
     # Grouping Functions
     def exploit_vs_explore_rand(sim_run: SimulationRun,
@@ -235,6 +235,8 @@ def main():
             problem = ProblemInstance(model_point, expert_point, user_points)
             for mode, mode_kwargs in modes.items():
                 for run_i in range(1, num_runs+1):
+                    user_points = update_points_movie(num_user_points=None)
+                    problem = ProblemInstance(model_point, expert_point, user_points)
                     print(f"{group_func_name}, {next_points_func_name}, {mode} - {run_i}/{num_runs}", end='\n\r')
                     simulator = Simulator(
                         get_groups=group_func,
