@@ -19,27 +19,28 @@ def main():
     neighborhood = json.loads(thisdir.joinpath("neighborhood.json").read_text())
     output_sentences = json.loads(thisdir.joinpath("all_sentences.json").read_text())
 
-    target_sentence = neighborhood[0]
+    # target_sentence = neighborhood[0]
+    # get center of neighborhood
+    center = np.mean([sentence["emotion"] for sentence in neighborhood[1:]], axis=0)
 
     rows = []
     for i, sentence in enumerate(neighborhood[1:], start=1):
-        distance = np.linalg.norm(np.array(target_sentence["emotion"]) - np.array(sentence["emotion"]))
-        rows.append([i, "neighborhood", None, distance])
+        distance = np.linalg.norm(center - np.array(sentence["emotion"]))
+        rows.append([i, "neighborhood", "N/A", distance])
 
     for i, sentence in enumerate(output_sentences, start=1):
-        distance = np.linalg.norm(np.array(target_sentence["emotion"]) - np.array(sentence["emotion"]))
-        rows.append([i, "output", sentence["k_fraction"], distance])
+        distance = np.linalg.norm(center - np.array(sentence["emotion"]))
+        rows.append([i, "output", f"k={sentence['k_fraction']}", distance])
 
-    df = pd.DataFrame(rows, columns=["num", "type", "k_fraction", "distance"])
+    df = pd.DataFrame(rows, columns=["num", "type", "samples", "distance"])
     print(df)
     fig = px.box(
         df,
-        x="k_fraction",
+        x="samples",
         y="distance",
         color="type",
         title="Distance from target sentence",
         points="all",
-        # category_orders={"k_fraction": label_order},
         template="plotly_white",
     )
     savepath = thisdir.joinpath("output/distance.html")

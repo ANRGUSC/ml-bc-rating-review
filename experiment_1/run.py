@@ -35,6 +35,8 @@ def get_embedding(sentences: List[str]):
     return sentence_arrays
 
 def main():
+    num_sentences = 20
+
     # load fine_tune_jobs from .json file
     fine_tune_jobs = json.loads(thisdir.joinpath("fine_tune_jobs.json").read_text())
     client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
@@ -48,17 +50,20 @@ def main():
 
         models[int(k_fraction)] = res.fine_tuned_model
 
-    print(models)
-    num_sentences = 5
     all_sentences = []
     for k_fraction, fine_tuned_model in models.items():
         sentences = []
         for i in range(num_sentences):
-            res = client.chat.completions.create(
-                model=fine_tuned_model,
-                messages=[{"role": "user", "content": prompt}],
-            )
-            
+            print(f"Generating sentence {i+1}/{num_sentences} for k_fraction {k_fraction}")
+            try:
+                res = client.chat.completions.create(
+                    model=fine_tuned_model,
+                    messages=[{"role": "user", "content": prompt}],
+                )
+            except Exception as e:
+                print(e)
+                print(f"Error generating sentence {i+1}/{num_sentences} for k_fraction {k_fraction}\n\tmodel={fine_tuned_model}\n\prompt={prompt}")
+                continue
             response = res.choices[0].message.content
             sentences.append(response)
         
