@@ -1,5 +1,6 @@
 import pathlib
 import json
+import random
 from typing import List
 import numpy as np
 from openai import OpenAI
@@ -50,6 +51,7 @@ def main():
 
         models[int(k_fraction)] = res.fine_tuned_model
 
+    neighborhood = json.loads(thisdir.joinpath("neighborhood.json").read_text())
     all_sentences = []
     for k_fraction, fine_tuned_model in models.items():
         sentences = []
@@ -66,16 +68,48 @@ def main():
                 continue
             response = res.choices[0].message.content
             sentences.append(response)
-        
+
         emotions = get_embedding(sentences)
         all_sentences.extend([
             {
                 "k_fraction": k_fraction,
                 "text": emotion["text"],
-                "emotion": emotion["emotion"].tolist()
+                "type": "output-ft",
+                "emotion": emotion["emotion"].tolist(),
             }
             for emotion in emotions
         ])
+
+    sentences = []
+    for i in range(num_sentences):
+        try:
+            examples = []
+            for example in random.choices(neighborhood, k=10):
+                examples.append({"role": "user", "content": prompt})
+                examples.append({"role": "assistant", "content": example["text"]})
+            res = client.chat.completions.create(
+                model='gpt-3.5-turbo',
+                messages=[
+                    *examples,
+                    {"role": "user", "content": prompt}
+                ],
+            )
+            response = res.choices[0].message.content
+            sentences.append(response)
+        except Exception as e:
+            print(e)
+            print(f"Error generating sentence {i+1}/{num_sentences} for k_fraction {k_fraction}\n\tmodel={fine_tuned_model}\n\prompt={prompt}")
+            continue
+    emotions = get_embedding(sentences)
+    all_sentences.extend([
+        {
+            "k_fraction": k_fraction,
+            "text": emotion["text"],
+            "type": "output-pe",
+            "emotion": emotion["emotion"].tolist(),
+        }
+        for emotion in emotions
+    ])
 
     thisdir.joinpath("all_sentences.json").write_text(json.dumps(all_sentences, indent=4), encoding="utf-8")
 

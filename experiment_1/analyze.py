@@ -30,7 +30,8 @@ def main():
 
     for i, sentence in enumerate(output_sentences, start=1):
         distance = np.linalg.norm(center - np.array(sentence["emotion"]))
-        rows.append([i, "output", f"k={sentence['k_fraction']}", distance])
+        label = f"k={sentence['k_fraction']}" if sentence["type"] == "output-ft" else "N/A"
+        rows.append([i, sentence["type"], label, distance])
 
     df = pd.DataFrame(rows, columns=["num", "type", "samples", "distance"])
     print(df)
