@@ -7,7 +7,7 @@ from openai import OpenAI
 import os
 import dotenv
 
-from fine_tune import prompt, sentence_arrays, label_order
+from fine_tune import generic_prompt, sentence_arrays, label_order, system_content
 from prepare import classifier
 
 dotenv.load_dotenv()
@@ -23,7 +23,7 @@ def get_embedding(sentences: List[str]):
         }
         for sentence, model_output in zip(sentences, model_outputs)
     ]
-
+    
     # convert emotion into a numpy array in the order of the label_order
     sentence_arrays = [
         {
@@ -60,11 +60,14 @@ def main():
             try:
                 res = client.chat.completions.create(
                     model=fine_tuned_model,
-                    messages=[{"role": "user", "content": prompt}],
+                    messages=[
+                        {"role": "system", "content": system_content},
+                        {"role": "user", "content": generic_prompt}
+                    ],
                 )
             except Exception as e:
                 print(e)
-                print(f"Error generating sentence {i+1}/{num_sentences} for k_fraction {k_fraction}\n\tmodel={fine_tuned_model}\n\prompt={prompt}")
+                print(f"Error generating sentence {i+1}/{num_sentences} for k_fraction {k_fraction}\n\tmodel={fine_tuned_model}\n\prompt={generic_prompt}")
                 continue
             response = res.choices[0].message.content
             sentences.append(response)
@@ -85,20 +88,20 @@ def main():
         try:
             examples = []
             for example in random.choices(neighborhood, k=10):
-                examples.append({"role": "user", "content": prompt})
+                examples.append({"role": "user", "content": generic_prompt})
                 examples.append({"role": "assistant", "content": example["text"]})
             res = client.chat.completions.create(
                 model='gpt-3.5-turbo',
                 messages=[
                     *examples,
-                    {"role": "user", "content": prompt}
+                    {"role": "user", "content": generic_prompt}
                 ],
             )
             response = res.choices[0].message.content
             sentences.append(response)
         except Exception as e:
             print(e)
-            print(f"Error generating sentence {i+1}/{num_sentences} for k_fraction {k_fraction}\n\tmodel={fine_tuned_model}\n\prompt={prompt}")
+            print(f"Error generating sentence {i+1}/{num_sentences} for k_fraction {k_fraction}\n\tmodel={fine_tuned_model}\n\prompt={generic_prompt}")
             continue
     emotions = get_embedding(sentences)
     all_sentences.extend([

@@ -12,23 +12,30 @@ load_dotenv()
 thisdir = pathlib.Path(__file__).parent.absolute()
 sentences = json.loads(thisdir.joinpath("model_outputs.json").read_text())
 
-label_order = {emotion["label"]: i for i, emotion in enumerate(sentences[0]["emotion"])}
+label_order = {"love": 0}
+for i, emotion in enumerate(sentences[0]["emotion"], start=1):
+    if emotion["label"] not in label_order:
+        label_order[emotion["label"]] = i
+
 for sentence in sentences:
     sentence["emotion"] = sorted(sentence["emotion"], key=lambda x: label_order[x["label"]])
 
-# convert emotion into a numpy array in the order of the label_order
 sentence_arrays = [
     {
         "text": sentence["text"],
-        "emotion": np.array([emotion["score"] for emotion in sentence["emotion"]])
+        "emotion": np.array([emotion["score"] for emotion in sorted(sentence["emotion"], key=lambda x: label_order[x["label"]])])
     }
     for sentence in sentences
 ]
-prompt = "write a reddit comment."
+
+generic_prompt = "write a reddit comment."
+loving_prompt = "write a reddit comment that evokes strong emotions of love."
+system_content = "A model that generates reddit comments that completely embodies the emotion of love and does not involve other emotions."
 
 def main():
-    # pick a random sentence
-    sentence = random.choice(sentence_arrays)
+    sorted_sentence_arrays = sorted(sentence_arrays, key=lambda x: x["emotion"][0], reverse=True)
+     
+    sentence = sorted_sentence_arrays[0]
 
     # get k nearest neighbors to the sentence
     k = 100
@@ -72,7 +79,8 @@ def main():
         lines = [
             json.dumps({
                 "messages": [
-                    {"role": "user", "content": prompt},
+                    {"role": "system", "content": system_content},
+                    {"role": "user", "content": loving_prompt},
                     {"role": "assistant", "content": sentence_arrays[i]["text"]}
                 ]
             })
@@ -91,7 +99,11 @@ def main():
         
         res = client.fine_tuning.jobs.create(
             training_file=res.id,
-            model="gpt-3.5-turbo"
+            model="gpt-3.5-turbo",
+            # hyperparameters = {
+            #     "n_epochs":3,
+            #     "learning_rate_multiplier":2
+			# }
         )
 
         print(f"Fine-tuning with {k_fraction} nearest neighbors")
