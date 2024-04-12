@@ -29,8 +29,8 @@ sentence_arrays = [
 ]
 
 generic_prompt = "write a reddit comment."
-loving_prompt = "write a reddit comment that evokes strong emotions of love."
-system_content = "A model that generates reddit comments that completely embodies the emotion of love and does not involve other emotions."
+generic_system_content = "A model that generates reddit comments."
+system_content = "A model that generates reddit comments that completely embodies the emotion provided in the training examples."
 
 def main():
     sorted_sentence_arrays = sorted(sentence_arrays, key=lambda x: x["emotion"][0], reverse=True)
@@ -38,7 +38,7 @@ def main():
     sentence = sorted_sentence_arrays[0]
 
     # get k nearest neighbors to the sentence
-    k = 100
+    k = 75
     # get the distances between the sentence and all other sentences
     distances = np.array([np.linalg.norm(sentence["emotion"] - other_sentence["emotion"]) for other_sentence in sentence_arrays])
     # get the indices of the k nearest neighbors
@@ -80,7 +80,7 @@ def main():
             json.dumps({
                 "messages": [
                     {"role": "system", "content": system_content},
-                    {"role": "user", "content": loving_prompt},
+                    {"role": "user", "content": generic_prompt},
                     {"role": "assistant", "content": sentence_arrays[i]["text"]}
                 ]
             })
@@ -100,10 +100,10 @@ def main():
         res = client.fine_tuning.jobs.create(
             training_file=res.id,
             model="gpt-3.5-turbo",
-            # hyperparameters = {
-            #     "n_epochs":3,
-            #     "learning_rate_multiplier":2
-			# }
+            hyperparameters = {
+                "n_epochs":3,
+                "learning_rate_multiplier":1.85
+			}
         )
 
         print(f"Fine-tuning with {k_fraction} nearest neighbors")

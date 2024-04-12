@@ -7,7 +7,7 @@ from openai import OpenAI
 import os
 import dotenv
 
-from fine_tune import generic_prompt, sentence_arrays, label_order, system_content
+from fine_tune import generic_prompt, sentence_arrays, label_order, system_content, generic_system_content
 from prepare import classifier
 
 dotenv.load_dotenv()
@@ -61,7 +61,7 @@ def main():
                 res = client.chat.completions.create(
                     model=fine_tuned_model,
                     messages=[
-                        {"role": "system", "content": system_content},
+                        {"role": "system", "content": generic_system_content},
                         {"role": "user", "content": generic_prompt}
                     ],
                 )

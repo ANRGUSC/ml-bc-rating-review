@@ -124,7 +124,7 @@ def main():
         points="all",
         template="plotly_white",
     )
-    savepath = thisdir.joinpath("output/distance_default_loving_ft_prompt.html")
+    savepath = thisdir.joinpath("output/distance_1.85lr_generic_content.html")
     savepath.parent.mkdir(parents=True, exist_ok=True)
     fig.write_html(savepath)
     
