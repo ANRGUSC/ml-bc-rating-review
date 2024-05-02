@@ -12,7 +12,13 @@ load_dotenv()
 thisdir = pathlib.Path(__file__).parent.absolute()
 sentences = json.loads(thisdir.joinpath("model_outputs.json").read_text())
 
-label_order = {"love": 0}
+generic_prompt = "write a reddit comment."
+generic_system_content = "A model that generates reddit comments."
+system_content = "A model that generates reddit comments that completely embodies the emotion provided in the training examples."
+lr = 3.00
+emotion_target = "confusion"
+
+label_order = {emotion_target: 0}
 for i, emotion in enumerate(sentences[0]["emotion"], start=1):
     if emotion["label"] not in label_order:
         label_order[emotion["label"]] = i
@@ -27,10 +33,6 @@ sentence_arrays = [
     }
     for sentence in sentences
 ]
-
-generic_prompt = "write a reddit comment."
-generic_system_content = "A model that generates reddit comments."
-system_content = "A model that generates reddit comments that completely embodies the emotion provided in the training examples."
 
 def main():
     sorted_sentence_arrays = sorted(sentence_arrays, key=lambda x: x["emotion"][0], reverse=True)
@@ -91,7 +93,7 @@ def main():
         fine_tuning_file.parent.mkdir(exist_ok=True)
         fine_tuning_file.write_text("\n".join(lines), encoding="utf-8")
 
-        client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+        client = OpenAI(api_key=os.environ["OPENAI_API_KEY_KUBISHI"])
         res = client.files.create(
             file=fine_tuning_file.open("rb"),
             purpose="fine-tune"
@@ -102,7 +104,7 @@ def main():
             model="gpt-3.5-turbo",
             hyperparameters = {
                 "n_epochs":3,
-                "learning_rate_multiplier":1.85
+                "learning_rate_multiplier":lr
 			}
         )
 
