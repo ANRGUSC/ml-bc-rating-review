@@ -198,7 +198,6 @@ def main():
     save_average_scores_to_csv(output_sentences)
     save_average_distances_to_csv(output_sentences, center)
 
-
     # plot_metric_trends(emotion_target=emotion_target, metric_type="averages")
 if __name__ == "__main__":
     main()

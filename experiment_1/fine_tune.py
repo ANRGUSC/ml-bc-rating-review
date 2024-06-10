@@ -12,13 +12,21 @@ load_dotenv()
 thisdir = pathlib.Path(__file__).parent.absolute()
 sentences = json.loads(thisdir.joinpath("model_outputs.json").read_text())
 
-# no system_content
 generic_prompt = "write a reddit comment."
 generic_system_content = "A model that generates reddit comments."
 system_content = "A model that generates reddit comments that completely embodies the emotion provided in the training examples."
-lr = 2.00
+lr = 2.10
 k = 100
 emotion_target = "love"
+
+random_sentence = random.choice(sentences)
+
+# highest_emotion = max(random_sentence["emotion"], key=lambda e: e["score"])
+
+# print(random_sentence["text"])
+# print(highest_emotion)
+
+# emotion_target = highest_emotion["label"]
 
 label_order = {emotion_target: 0}
 for i, emotion in enumerate(sentences[0]["emotion"], start=1):
@@ -43,6 +51,8 @@ def main():
         sentence_arrays, key=lambda x: x["emotion"][0], reverse=True)
 
     sentence = sorted_sentence_arrays[0]
+    # sentence = next(
+    #     item for item in sentence_arrays if item["text"] == random_sentence["text"])
 
     # get the distances between the sentence and all other sentences
     distances = np.array([np.linalg.norm(
@@ -99,7 +109,7 @@ def main():
         fine_tuning_file.parent.mkdir(exist_ok=True)
         fine_tuning_file.write_text("\n".join(lines), encoding="utf-8")
 
-        client = OpenAI(api_key=os.environ["OPENAI_API_KEY_KUBISHI"])
+        client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
         res = client.files.create(
             file=fine_tuning_file.open("rb"),
             purpose="fine-tune"

@@ -43,7 +43,7 @@ def main():
     # load fine_tune_jobs from .json file
     fine_tune_jobs = json.loads(thisdir.joinpath(
         "fine_tune_jobs.json").read_text())
-    client = OpenAI(api_key=os.environ["OPENAI_API_KEY_KUBISHI"])
+    client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
     models = {0: "gpt-3.5-turbo"}
     for k_fraction, fine_tune_job_id in fine_tune_jobs.items():
