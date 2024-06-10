@@ -12,11 +12,13 @@ load_dotenv()
 thisdir = pathlib.Path(__file__).parent.absolute()
 sentences = json.loads(thisdir.joinpath("model_outputs.json").read_text())
 
+# no system_content
 generic_prompt = "write a reddit comment."
 generic_system_content = "A model that generates reddit comments."
 system_content = "A model that generates reddit comments that completely embodies the emotion provided in the training examples."
-lr = 3.00
-emotion_target = "confusion"
+lr = 2.00
+k = 100
+emotion_target = "love"
 
 label_order = {emotion_target: 0}
 for i, emotion in enumerate(sentences[0]["emotion"], start=1):
@@ -24,7 +26,8 @@ for i, emotion in enumerate(sentences[0]["emotion"], start=1):
         label_order[emotion["label"]] = i
 
 for sentence in sentences:
-    sentence["emotion"] = sorted(sentence["emotion"], key=lambda x: label_order[x["label"]])
+    sentence["emotion"] = sorted(
+        sentence["emotion"], key=lambda x: label_order[x["label"]])
 
 sentence_arrays = [
     {
@@ -34,15 +37,16 @@ sentence_arrays = [
     for sentence in sentences
 ]
 
+
 def main():
-    sorted_sentence_arrays = sorted(sentence_arrays, key=lambda x: x["emotion"][0], reverse=True)
-     
+    sorted_sentence_arrays = sorted(
+        sentence_arrays, key=lambda x: x["emotion"][0], reverse=True)
+
     sentence = sorted_sentence_arrays[0]
 
-    # get k nearest neighbors to the sentence
-    k = 75
     # get the distances between the sentence and all other sentences
-    distances = np.array([np.linalg.norm(sentence["emotion"] - other_sentence["emotion"]) for other_sentence in sentence_arrays])
+    distances = np.array([np.linalg.norm(
+        sentence["emotion"] - other_sentence["emotion"]) for other_sentence in sentence_arrays])
     # get the indices of the k nearest neighbors
     neighborhood = np.argsort(distances)[:k+1]
 
@@ -81,15 +85,17 @@ def main():
         lines = [
             json.dumps({
                 "messages": [
-                    {"role": "system", "content": system_content},
+                    # {"role": "system", "content": system_content},
                     {"role": "user", "content": generic_prompt},
-                    {"role": "assistant", "content": sentence_arrays[i]["text"]}
+                    {"role": "assistant",
+                        "content": sentence_arrays[i]["text"]}
                 ]
             })
             for i in nearest_neighbors[:k_fraction]
         ]
 
-        fine_tuning_file = thisdir.joinpath("fine_tuning_files", f"{k_fraction}.jsonl")
+        fine_tuning_file = thisdir.joinpath(
+            "fine_tuning_files", f"{k_fraction}.jsonl")
         fine_tuning_file.parent.mkdir(exist_ok=True)
         fine_tuning_file.write_text("\n".join(lines), encoding="utf-8")
 
@@ -98,14 +104,14 @@ def main():
             file=fine_tuning_file.open("rb"),
             purpose="fine-tune"
         )
-        
+
         res = client.fine_tuning.jobs.create(
             training_file=res.id,
             model="gpt-3.5-turbo",
-            hyperparameters = {
-                "n_epochs":3,
-                "learning_rate_multiplier":lr
-			}
+            hyperparameters={
+                "n_epochs": 3,
+                "learning_rate_multiplier": lr
+            }
         )
 
         print(f"Fine-tuning with {k_fraction} nearest neighbors")
@@ -114,8 +120,8 @@ def main():
         fine_tune_jobs[k_fraction] = res.id
 
     fine_tune_jobs_file = thisdir.joinpath("fine_tune_jobs.json")
-    fine_tune_jobs_file.write_text(json.dumps(fine_tune_jobs, indent=4), encoding="utf-8")
-
+    fine_tune_jobs_file.write_text(json.dumps(
+        fine_tune_jobs, indent=4), encoding="utf-8")
 
 
 if __name__ == "__main__":
