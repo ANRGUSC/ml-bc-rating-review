@@ -1,18 +1,23 @@
 import pathlib
 import json
-import random
-from typing import List
 import numpy as np
-from openai import OpenAI
-import os
+import sys
 import dotenv
+import config
+from typing import List
 
-from fine_tune_initial import prompt, sentence_arrays, label_order
 from prepare import classifier
 
 dotenv.load_dotenv()
 
 thisdir = pathlib.Path(__file__).parent.absolute()
+settings_path = thisdir.joinpath('experiment_settings.json')
+
+with open(settings_path, 'r') as file:
+    settings = json.load(file)
+
+emotion_target = settings['emotion_target']
+label_order = settings['label_order']
 
 
 def get_embedding(sentences: List[str]):
@@ -37,31 +42,28 @@ def get_embedding(sentences: List[str]):
     return sentence_arrays
 
 
-def main():
+def main(model_gen):
     num_sentences = 50
-
-    model_gen = 3
 
     # load fine_tune_jobs from .json file
     fine_tune_jobs = json.loads(thisdir.joinpath(
         f"fine_tune_jobs_{model_gen}.json").read_text())
-    client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
     # read the previous all_sentences.json file
     all_sentences = json.loads(thisdir.joinpath(
-        f"all_sentences_{model_gen - 1}.json").read_text())
+        f"output/{emotion_target}/all_sentences_{model_gen - 1}.json").read_text())
 
     models = {}
     for k_fraction, fine_tune_job_id in fine_tune_jobs.items():
         # get trained model
-        res = client.fine_tuning.jobs.retrieve(
+        res = config.client.fine_tuning.jobs.retrieve(
             fine_tuning_job_id=fine_tune_job_id
         )
 
         models[int(k_fraction)] = res.fine_tuned_model
 
     neighborhood = json.loads(thisdir.joinpath(
-        "neighborhood.json").read_text())
+        f"output/{emotion_target}/neighborhood.json").read_text())
     sentence = neighborhood[0]
     all_sentences = []
     local_distance_array = []
@@ -72,19 +74,20 @@ def main():
             print(
                 f"Generating sentence {i+1}/{num_sentences} for model {k_fraction}")
             try:
-                res = client.chat.completions.create(
+                res = config.client.chat.completions.create(
                     model=fine_tuned_model,
-                    messages=[{"role": "user", "content": prompt}],
+                    messages=[{"role": "user", "content": config.prompt}],
                 )
             except Exception as e:
                 print(e)
                 print(
-                    f"Error generating sentence {i+1}/{num_sentences} for k_fraction {k_fraction}\n\tmodel={fine_tuned_model}\n\prompt={prompt}")
+                    f"Error generating sentence {i+1}/{num_sentences} for k_fraction {k_fraction}\n\tmodel={fine_tuned_model}\n\prompt={config.prompt}")
                 continue
             response = res.choices[0].message.content
             sentences.append(response)
 
         emotions = get_embedding(sentences)
+
         # Calculate the distance between the sentence's emotion and the emotions of the generated sentences
         for i in range(num_sentences):
             distance = np.linalg.norm(
@@ -125,42 +128,11 @@ def main():
         sentence for sentence in all_sentences if sentence['k_fraction'] == best_model_fraction]
 
     # only write the best sentences to all_sentences_{model_gen}.json
-    thisdir.joinpath(f"all_sentences_{model_gen}.json").write_text(
+    thisdir.joinpath(f"output/{emotion_target}/all_sentences_{model_gen}.json").write_text(
         json.dumps(best_sentences, indent=4), encoding="utf-8")
-    # Choose the model with the best performance
-    # k_fractions = [int(k*1/3), int(k*2/3), k]
-
-    # sentences = []
-    # for i in range(num_sentences):
-    #     try:
-    #         examples = []
-    #         for example in random.choices(neighborhood, k=10):
-    #             examples.append({"role": "user", "content": prompt})
-    #             examples.append({"role": "assistant", "content": example["text"]})
-    #         res = client.chat.completions.create(
-    #             model='gpt-3.5-turbo',
-    #             messages=[
-    #                 *examples,
-    #                 {"role": "user", "content": prompt}
-    #             ],
-    #         )
-    #         response = res.choices[0].message.content
-    #         sentences.append(response)
-    #     except Exception as e:
-    #         print(e)
-    #         print(f"Error generating sentence {i+1}/{num_sentences} for k_fraction {k_fraction}\n\tmodel={fine_tuned_model}\n\prompt={prompt}")
-    #         continue
-    # emotions = get_embedding(sentences)
-    # all_sentences.extend([
-    #     {
-    #         "k_fraction": k_fraction,
-    #         "text": emotion["text"],
-    #         "type": "output-pe",
-    #         "emotion": emotion["emotion"].tolist(),
-    #     }
-    #     for emotion in emotions
-    # ])
 
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) > 1:
+        model_gen = int(sys.argv[1])
+    main(model_gen)

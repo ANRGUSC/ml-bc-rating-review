@@ -1,60 +1,52 @@
 import json
 import random
-import time
-import sys
 import numpy as np
 import pathlib
-from openai import OpenAI
-import os
+import sys
+import config
 from dotenv import load_dotenv
 
 load_dotenv()
 
+# 'realization', 'fear', 'annoyance', 'admiration', 'relief', 'confusion', 'approval', 'remorse', 'sadness', 'grief', 'nervousness', 'optimism', 'disgust', 'joy', 'amusement', 'embarrassment', 'love', 'pride', 'gratitude', 'disappointment', 'surprise', 'desire', 'anger', 'curiosity', 'disapproval', 'excitement', 'caring', 'neutral'
 thisdir = pathlib.Path(__file__).parent.absolute()
-sentences = json.loads(thisdir.joinpath("model_outputs.json").read_text())
-
-emotion_target = "love"
-
-# Sets the label order such that emotion_target is first
-label_order = {emotion_target: 0}
-for i, emotion in enumerate(sentences[0]["emotion"], start=1):
-    if emotion["label"] not in label_order:
-        label_order[emotion["label"]] = i
-
-# label_order = {emotion["label"]: i for i, emotion in enumerate(sentences[0]["emotion"])}
-
-# convert emotion into a numpy array in the order of the label_order
-# sentence_arrays = [
-#     {
-#         "text": sentence["text"],
-#         "emotion": np.array([emotion["score"] for emotion in sentence["emotion"]])
-#     }
-#     for sentence in sentences
-# ]
-
-# sorts every sentence emotion array by label_order
-sentence_arrays = [
-    {
-        "text": sentence["text"],
-        "emotion": np.array([emotion["score"] for emotion in sorted(sentence["emotion"], key=lambda x: label_order[x["label"]])])
-    }
-    for sentence in sentences
-]
-prompt = "write a reddit comment."
 
 
-def main():
+def main(emotion_target):
+    sentences = json.loads(thisdir.joinpath("model_outputs.json").read_text())
+
+    # Sets the label order such that emotion_target is first
+    label_order = {emotion_target: 0}
+    for i, emotion in enumerate(sentences[0]["emotion"], start=1):
+        if emotion["label"] not in label_order:
+            label_order[emotion["label"]] = i
+
+    settings_path = thisdir.joinpath('experiment_settings.json')
+    with open(settings_path, 'w') as file:
+        json.dump({'emotion_target': emotion_target,
+                  'label_order': label_order}, file, indent=4)
+
+    # sorts every sentence emotion array by label_order
+    sentence_arrays = [
+        {
+            "text": sentence["text"],
+            "emotion": np.array([emotion["score"] for emotion in sorted(sentence["emotion"], key=lambda x: label_order[x["label"]])])
+        }
+        for sentence in sentences
+    ]
     # sorts sentence arrays such that highest emotion_target is first in descending order
     sorted_sentence_arrays = sorted(
         sentence_arrays, key=lambda x: x["emotion"][0], reverse=True)
 
     # picks the highest emotion_target sentence
     sentence = sorted_sentence_arrays[0]
-    # pick a random sentence
-    # sentence = random.choice(sentence_arrays)
 
     # Dumps the chosen sentence into a JSON file
-    sentence_file = thisdir.joinpath("sentence.json")
+    sentence_file = thisdir.joinpath(
+        f"output/{emotion_target}/target_sentence.json")
+
+    sentence_file.parent.mkdir(parents=True, exist_ok=True)
+
     sentence_file.write_text(
         json.dumps(
             {
@@ -71,10 +63,12 @@ def main():
     # get the distances between the sentence and all other sentences
     distances = np.array([np.linalg.norm(
         sentence["emotion"] - other_sentence["emotion"]) for other_sentence in sentence_arrays])
+
     # get the indices of the k nearest neighbors without sorting
     neighborhood = np.argsort(distances)[:k+1]
 
-    neighborhood_file = thisdir.joinpath("neighborhood.json")
+    neighborhood_file = thisdir.joinpath(
+        f"output/{emotion_target}/neighborhood.json")
     neighborhood_file.write_text(
         json.dumps(
             [
@@ -110,15 +104,12 @@ def main():
     current_line = 0
 
     for k_fraction in k_fractions:
-
-        # create fine-tuning file
-        # {"messages": [{"role": "system", "content": "Marv is a factual chatbot that is also sarcastic."}, {"role": "user", "content": "What's the capital of France?"}, {"role": "assistant", "content": "Paris, as if everyone doesn't know that already."}]}
         lines = [
             json.dumps({
                 "messages": [
-                    {"role": "user", "content": prompt},
+                    {"role": "user", "content": config.prompt},
                     {"role": "assistant",
-                        "content": sentence_arrays[i]["text"]}
+                     "content": sentence_arrays[i]["text"]}
                 ]
             })
             for i in nearest_neighbors[current_line:current_line+k_fraction]
@@ -130,13 +121,12 @@ def main():
         fine_tuning_file.parent.mkdir(exist_ok=True)
         fine_tuning_file.write_text("\n".join(lines), encoding="utf-8")
 
-        client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
-        res = client.files.create(
+        res = config.client.files.create(
             file=fine_tuning_file.open("rb"),
             purpose="fine-tune"
         )
 
-        res = client.fine_tuning.jobs.create(
+        res = config.client.fine_tuning.jobs.create(
             training_file=res.id,
             model="gpt-3.5-turbo"
         )
@@ -152,4 +142,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) > 1:
+        emotion_target = sys.argv[1]
+
+    main(emotion_target)

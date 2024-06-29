@@ -1,18 +1,21 @@
 import pathlib
 import json
-import random
-from typing import List
 import numpy as np
-from openai import OpenAI
-import os
 import dotenv
-
-from fine_tune_initial import prompt, sentence_arrays, label_order
+import config
+from typing import List
 from prepare import classifier
 
 dotenv.load_dotenv()
 
 thisdir = pathlib.Path(__file__).parent.absolute()
+settings_path = thisdir.joinpath('experiment_settings.json')
+
+with open(settings_path, 'r') as file:
+    settings = json.load(file)
+
+emotion_target = settings['emotion_target']
+label_order = settings['label_order']
 
 
 def get_embedding(sentences: List[str]):
@@ -45,19 +48,18 @@ def main():
     # load fine_tune_jobs from .json file
     fine_tune_jobs = json.loads(thisdir.joinpath(
         "fine_tune_jobs_initial.json").read_text())
-    client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
     models = {}
     for k_fraction, fine_tune_job_id in fine_tune_jobs.items():
         # get trained model
-        res = client.fine_tuning.jobs.retrieve(
+        res = config.client.fine_tuning.jobs.retrieve(
             fine_tuning_job_id=fine_tune_job_id
         )
 
         models[int(k_fraction)] = res.fine_tuned_model
 
     neighborhood = json.loads(thisdir.joinpath(
-        "neighborhood.json").read_text())
+        f"output/{emotion_target}/neighborhood.json").read_text())
     sentence = neighborhood[0]
     all_sentences = []
     local_distance_array = []
@@ -68,14 +70,14 @@ def main():
             print(
                 f"Generating sentence {i+1}/{num_sentences} for model {k_fraction}")
             try:
-                res = client.chat.completions.create(
+                res = config.client.chat.completions.create(
                     model=fine_tuned_model,
-                    messages=[{"role": "user", "content": prompt}],
+                    messages=[{"role": "user", "content": config.prompt}],
                 )
             except Exception as e:
                 print(e)
                 print(
-                    f"Error generating sentence {i+1}/{num_sentences} for k_fraction {k_fraction}\n\tmodel={fine_tuned_model}\n\prompt={prompt}")
+                    f"Error generating sentence {i+1}/{num_sentences} for k_fraction {k_fraction}\n\tmodel={fine_tuned_model}\n\prompt={config.prompt}")
                 continue
             response = res.choices[0].message.content
             sentences.append(response)
@@ -115,46 +117,12 @@ def main():
     thisdir.joinpath("best_model_id.json").write_text(
         json.dumps(best_model, indent=4), encoding="utf-8")
 
-    # Choose the model with the best performance
-    # k_fractions = [int(k*1/3), int(k*2/3), k]
-
-    # sentences = []
-    # for i in range(num_sentences):
-    #     try:
-    #         examples = []
-    #         for example in random.choices(neighborhood, k=10):
-    #             examples.append({"role": "user", "content": prompt})
-    #             examples.append({"role": "assistant", "content": example["text"]})
-    #         res = client.chat.completions.create(
-    #             model='gpt-3.5-turbo',
-    #             messages=[
-    #                 *examples,
-    #                 {"role": "user", "content": prompt}
-    #             ],
-    #         )
-    #         response = res.choices[0].message.content
-    #         sentences.append(response)
-    #     except Exception as e:
-    #         print(e)
-    #         print(f"Error generating sentence {i+1}/{num_sentences} for k_fraction {k_fraction}\n\tmodel={fine_tuned_model}\n\prompt={prompt}")
-    #         continue
-    # emotions = get_embedding(sentences)
-    # all_sentences.extend([
-    #     {
-    #         "k_fraction": k_fraction,
-    #         "text": emotion["text"],
-    #         "type": "output-pe",
-    #         "emotion": emotion["emotion"].tolist(),
-    #     }
-    #     for emotion in emotions
-    # ])
-
     best_model_fraction = min_distance * 33 + 33
     best_sentences = [
         sentence for sentence in all_sentences if sentence['k_fraction'] == best_model_fraction]
 
     # only write best sentences to all_sentences_1.json
-    thisdir.joinpath("all_sentences_1.json").write_text(
+    thisdir.joinpath(f"output/{emotion_target}/all_sentences_1.json").write_text(
         json.dumps(best_sentences, indent=4), encoding="utf-8")
 
 

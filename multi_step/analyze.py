@@ -1,31 +1,30 @@
 import pathlib
 import json
-from typing import List
 import numpy as np
-from openai import OpenAI
-import os
-
 import pandas as pd
+import config
 import plotly.express as px
-
-from fine_tune_initial import prompt, sentence_arrays, label_order
-# from prepare import classifier
 
 
 thisdir = pathlib.Path(__file__).parent.absolute()
+settings_path = thisdir.joinpath('experiment_settings.json')
+
+with open(settings_path, 'r') as file:
+    settings = json.load(file)
+
+emotion_target = settings['emotion_target']
 
 
 def main():
     neighborhood = json.loads(thisdir.joinpath(
-        "neighborhood.json").read_text())
+        f"output/{emotion_target}/neighborhood.json").read_text())
     output_sentence_1 = json.loads(
-        thisdir.joinpath("all_sentences_1.json").read_text())
+        thisdir.joinpath(f"output/{emotion_target}/all_sentences_1.json").read_text())
     output_sentence_2 = json.loads(
-        thisdir.joinpath("all_sentences_2.json").read_text())
+        thisdir.joinpath(f"output/{emotion_target}/all_sentences_2.json").read_text())
     output_sentence_3 = json.loads(
-        thisdir.joinpath("all_sentences_3.json").read_text())
+        thisdir.joinpath(f"output/{emotion_target}/all_sentences_3.json").read_text())
 
-    # target_sentence = neighborhood[0]
     # get center of neighborhood
     center = np.mean([sentence["emotion"]
                      for sentence in neighborhood[1:]], axis=0)
@@ -62,7 +61,8 @@ def main():
         points="all",
         template="plotly_white",
     )
-    savepath = thisdir.joinpath("output/distance_love.html")
+    savepath = thisdir.joinpath(
+        f"output/{emotion_target}/distance.html")
     savepath.parent.mkdir(parents=True, exist_ok=True)
     fig.write_html(savepath)
 
