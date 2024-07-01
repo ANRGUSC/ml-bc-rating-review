@@ -10,12 +10,10 @@ check_error() {
 # emotions=('realization' 'fear' 'annoyance' 'admiration' 'relief' 'confusion' 'approval' 'remorse' 'sadness' 'grief' 'nervousness' 'optimism' 'disgust' 'joy' 'amusement' 'embarrassment' 'love' 'pride' 'gratitude' 'disappointment' 'surprise' 'desire' 'anger' 'curiosity' 'disapproval' 'excitement' 'caring' 'neutral')
 
 # emotions=('realization' 'fear' 'annoyance')
-# emotions=('admiration' 'relief' 'confusion')
-emotions=('approval')
-# emotions=('approval' 'remorse' 'sadness')
-# emotions=('grief' 'nervousness' 'optimism')
-# emotions=('disgust' 'joy' 'amusement')
-# emotions=('embarrassment' 'pride' 'gratitude')
+# emotions=('admiration' 'relief' 'confusion') # rerun this
+# emotions=('approval' 'remorse' 'sadness' 'grief' 'nervousness' 'optimism')
+# emotions=('optimism' 'disgust' 'joy')
+emotions=('amusement' 'embarrassment' 'pride' 'gratitude')
 # emotions=('disappointment' 'surprise' 'desire')
 # emotions=('anger' 'curiosity' 'disapproval')
 # emotions=('excitement' 'caring' 'neutral')

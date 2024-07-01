@@ -1,12 +1,13 @@
 {
-    "emotion_target": "approval",
+    "emotion_target": "amusement",
     "label_order": {
-        "approval": 0,
+        "amusement": 0,
         "remorse": 1,
         "sadness": 2,
         "love": 3,
         "caring": 4,
         "disappointment": 5,
+        "approval": 6,
         "gratitude": 7,
         "admiration": 8,
         "grief": 9,
@@ -19,7 +20,6 @@
         "anger": 16,
         "embarrassment": 17,
         "joy": 18,
-        "amusement": 19,
         "disgust": 20,
         "annoyance": 21,
         "neutral": 22,

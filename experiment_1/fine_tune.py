@@ -12,9 +12,11 @@ load_dotenv()
 thisdir = pathlib.Path(__file__).parent.absolute()
 sentences = json.loads(thisdir.joinpath("model_outputs.json").read_text())
 
-label_order = {emotion["label"]: i for i, emotion in enumerate(sentences[0]["emotion"])}
+label_order = {emotion["label"]: i for i,
+               emotion in enumerate(sentences[0]["emotion"])}
 for sentence in sentences:
-    sentence["emotion"] = sorted(sentence["emotion"], key=lambda x: label_order[x["label"]])
+    sentence["emotion"] = sorted(
+        sentence["emotion"], key=lambda x: label_order[x["label"]])
 
 # convert emotion into a numpy array in the order of the label_order
 sentence_arrays = [
@@ -26,6 +28,7 @@ sentence_arrays = [
 ]
 prompt = "write a reddit comment."
 
+
 def main():
     # pick a random sentence
     sentence = random.choice(sentence_arrays)
@@ -33,7 +36,8 @@ def main():
     # get k nearest neighbors to the sentence
     k = 100
     # get the distances between the sentence and all other sentences
-    distances = np.array([np.linalg.norm(sentence["emotion"] - other_sentence["emotion"]) for other_sentence in sentence_arrays])
+    distances = np.array([np.linalg.norm(
+        sentence["emotion"] - other_sentence["emotion"]) for other_sentence in sentence_arrays])
     # get the indices of the k nearest neighbors
     neighborhood = np.argsort(distances)[:k+1]
 
@@ -73,22 +77,24 @@ def main():
             json.dumps({
                 "messages": [
                     {"role": "user", "content": prompt},
-                    {"role": "assistant", "content": sentence_arrays[i]["text"]}
+                    {"role": "assistant",
+                        "content": sentence_arrays[i]["text"]}
                 ]
             })
             for i in nearest_neighbors[:k_fraction]
         ]
 
-        fine_tuning_file = thisdir.joinpath("fine_tuning_files", f"{k_fraction}.jsonl")
+        fine_tuning_file = thisdir.joinpath(
+            "fine_tuning_files", f"{k_fraction}.jsonl")
         fine_tuning_file.parent.mkdir(exist_ok=True)
         fine_tuning_file.write_text("\n".join(lines), encoding="utf-8")
 
-        client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+        client = OpenAI(api_key=os.environ["OPENAI_API_KEY_KUBISHI"])
         res = client.files.create(
             file=fine_tuning_file.open("rb"),
             purpose="fine-tune"
         )
-        
+
         res = client.fine_tuning.jobs.create(
             training_file=res.id,
             model="gpt-3.5-turbo"
@@ -100,8 +106,8 @@ def main():
         fine_tune_jobs[k_fraction] = res.id
 
     fine_tune_jobs_file = thisdir.joinpath("fine_tune_jobs.json")
-    fine_tune_jobs_file.write_text(json.dumps(fine_tune_jobs, indent=4), encoding="utf-8")
-
+    fine_tune_jobs_file.write_text(json.dumps(
+        fine_tune_jobs, indent=4), encoding="utf-8")
 
 
 if __name__ == "__main__":

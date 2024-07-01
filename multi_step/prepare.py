@@ -1,10 +1,20 @@
-from transformers import pipeline
+from transformers import pipeline, AutoTokenizer
 import json
 import pathlib
 import pandas as pd
 
 thisdir = pathlib.Path(__file__).parent.absolute()
-classifier = pipeline(task="text-classification", model="SamLowe/roberta-base-go_emotions", top_k=None)
+
+tokenizer = AutoTokenizer.from_pretrained("SamLowe/roberta-base-go_emotions")
+
+classifier = pipeline(
+    task="text-classification",
+    model="SamLowe/roberta-base-go_emotions",
+    tokenizer=tokenizer,
+    truncation=True,
+    top_k=None
+)
+
 
 def main():
     # sentences = [
@@ -19,7 +29,6 @@ def main():
     # load sentences from .parquet file
     df = pd.read_parquet(thisdir.joinpath("sentences.parquet"))
     sentences = df["text"].tolist()
-    
 
     model_outputs = classifier(sentences)
 
@@ -31,7 +40,9 @@ def main():
         for sentence, model_output in zip(sentences, model_outputs)
     ]
 
-    thisdir.joinpath("model_outputs.json").write_text(json.dumps(json_output, indent=4), encoding="utf-8")
+    thisdir.joinpath("model_outputs.json").write_text(
+        json.dumps(json_output, indent=4), encoding="utf-8")
+
 
 if __name__ == "__main__":
     main()

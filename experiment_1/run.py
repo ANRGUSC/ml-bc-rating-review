@@ -14,6 +14,7 @@ dotenv.load_dotenv()
 
 thisdir = pathlib.Path(__file__).parent.absolute()
 
+
 def get_embedding(sentences: List[str]):
     model_outputs = classifier(sentences)
     model_outputs = [
@@ -35,12 +36,14 @@ def get_embedding(sentences: List[str]):
 
     return sentence_arrays
 
+
 def main():
     num_sentences = 20
 
     # load fine_tune_jobs from .json file
-    fine_tune_jobs = json.loads(thisdir.joinpath("fine_tune_jobs.json").read_text())
-    client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+    fine_tune_jobs = json.loads(thisdir.joinpath(
+        "fine_tune_jobs.json").read_text())
+    client = OpenAI(api_key=os.environ["OPENAI_API_KEY_KUBISHI"])
 
     models = {0: "gpt-3.5-turbo"}
     for k_fraction, fine_tune_job_id in fine_tune_jobs.items():
@@ -51,12 +54,14 @@ def main():
 
         models[int(k_fraction)] = res.fine_tuned_model
 
-    neighborhood = json.loads(thisdir.joinpath("neighborhood.json").read_text())
+    neighborhood = json.loads(thisdir.joinpath(
+        "neighborhood.json").read_text())
     all_sentences = []
     for k_fraction, fine_tuned_model in models.items():
         sentences = []
         for i in range(num_sentences):
-            print(f"Generating sentence {i+1}/{num_sentences} for k_fraction {k_fraction}")
+            print(
+                f"Generating sentence {i+1}/{num_sentences} for k_fraction {k_fraction}")
             try:
                 res = client.chat.completions.create(
                     model=fine_tuned_model,
@@ -64,7 +69,8 @@ def main():
                 )
             except Exception as e:
                 print(e)
-                print(f"Error generating sentence {i+1}/{num_sentences} for k_fraction {k_fraction}\n\tmodel={fine_tuned_model}\n\prompt={prompt}")
+                print(
+                    f"Error generating sentence {i+1}/{num_sentences} for k_fraction {k_fraction}\n\tmodel={fine_tuned_model}\n\prompt={prompt}")
                 continue
             response = res.choices[0].message.content
             sentences.append(response)
@@ -86,7 +92,8 @@ def main():
             examples = []
             for example in random.choices(neighborhood, k=10):
                 examples.append({"role": "user", "content": prompt})
-                examples.append({"role": "assistant", "content": example["text"]})
+                examples.append(
+                    {"role": "assistant", "content": example["text"]})
             res = client.chat.completions.create(
                 model='gpt-3.5-turbo',
                 messages=[
@@ -98,7 +105,8 @@ def main():
             sentences.append(response)
         except Exception as e:
             print(e)
-            print(f"Error generating sentence {i+1}/{num_sentences} for k_fraction {k_fraction}\n\tmodel={fine_tuned_model}\n\prompt={prompt}")
+            print(
+                f"Error generating sentence {i+1}/{num_sentences} for k_fraction {k_fraction}\n\tmodel={fine_tuned_model}\n\prompt={prompt}")
             continue
     emotions = get_embedding(sentences)
     all_sentences.extend([
@@ -111,7 +119,8 @@ def main():
         for emotion in emotions
     ])
 
-    thisdir.joinpath("all_sentences.json").write_text(json.dumps(all_sentences, indent=4), encoding="utf-8")
+    thisdir.joinpath("all_sentences.json").write_text(
+        json.dumps(all_sentences, indent=4), encoding="utf-8")
 
 
 if __name__ == "__main__":
