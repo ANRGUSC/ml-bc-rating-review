@@ -1,7 +1,7 @@
 {
-    "emotion_target": "amusement",
+    "emotion_target": "confusion",
     "label_order": {
-        "amusement": 0,
+        "confusion": 0,
         "remorse": 1,
         "sadness": 2,
         "love": 3,
@@ -16,10 +16,10 @@
         "realization": 12,
         "desire": 13,
         "curiosity": 14,
-        "confusion": 15,
         "anger": 16,
         "embarrassment": 17,
         "joy": 18,
+        "amusement": 19,
         "disgust": 20,
         "annoyance": 21,
         "neutral": 22,
