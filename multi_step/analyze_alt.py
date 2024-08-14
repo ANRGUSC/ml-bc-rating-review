@@ -1,18 +1,15 @@
-import pathlib
+import os
 import json
 import numpy as np
 import pandas as pd
-import dotenv
+import seaborn as sns
 import matplotlib.pyplot as plt
-import os
+import dotenv
+import pathlib
 
-# Load environment variables
 dotenv.load_dotenv()
 
-# Get the directory of the script being run
 thisdir = pathlib.Path(__file__).parent.absolute()
-
-emotion_target = "love"
 
 
 def main():
@@ -20,86 +17,95 @@ def main():
     emotions = [folder for folder in os.listdir(
         output_dir) if os.path.isdir(output_dir.joinpath(folder))]
 
+    gen3_distances = []
+    all_data = []
+    emotion_percentiles = {}
+
     for emotion_target in emotions:
-        emotion_dir = output_dir.joinpath(f"{emotion_target}")
-        # Load data from the neighborhood JSON file
+        emotion_dir = output_dir.joinpath(emotion_target)
+
         with open(emotion_dir.joinpath('neighborhood.json'), 'r') as file:
             neighborhood = json.load(file)
 
-        # Calculate the center of the neighborhood based on emotion vectors
-        center = np.mean([sentence["emotion"]
-                          for sentence in neighborhood[1:]], axis=0)
+        center = np.mean([np.array(sentence["emotion"])
+                         for sentence in neighborhood], axis=0)
 
-        # Initialize list to store data
         rows = []
 
-        # Compute distances for neighborhood sentences
-        for i, sentence in enumerate(neighborhood[1:], start=1):
-            distance = np.linalg.norm(center - np.array(sentence["emotion"]))
-            rows.append([i, "neighborhood", "N/A", distance])
+        neighborhood_distances = [np.linalg.norm(
+            center - np.array(sentence["emotion"])) for sentence in neighborhood[1:]]
 
-        # Load and compute distances for multiple output sentences across generations
-        for gen in range(1, 4):  # Assuming three generations for now
+        for gen in range(1, 4):
             output_sentences = json.loads(
                 (emotion_dir.joinpath(f"all_sentences_{gen}.json")).read_text())
+            output_distances = [np.linalg.norm(
+                center - np.array(sentence["emotion"])) for sentence in output_sentences]
+            rows.extend([(idx, f"Gen {gen}", f"k={sentence['k_fraction']}", dist, emotion_target) for idx, sentence, dist in zip(
+                range(1, len(output_distances) + 1), output_sentences, output_distances)])
 
-            for i, sentence in enumerate(output_sentences, start=1):
-                distance = np.linalg.norm(
-                    center - np.array(sentence["emotion"]))
-                label = f"k={sentence['k_fraction']}" if sentence["type"] == "output-ft" else "N/A"
-                rows.append(
-                    [i, sentence["type"], f"{label} Gen {gen}", distance])
+        df = pd.DataFrame(
+            rows, columns=["num", "generation", "k_fraction", "distance", "emotion"])
 
-        # Create a DataFrame from the rows
-        df = pd.DataFrame(rows, columns=["num", "type", "samples", "distance"])
+        gen3_mean_distance = df[df['generation'] == 'Gen 3']['distance'].mean()
+        gen3_distances.append(gen3_mean_distance)
+
+        all_data.append(df)
 
         plt.figure(figsize=(12, 6))
+        sns.boxplot(x='generation', y='distance',
+                    data=df, hue="generation", width=0.3, showfliers=False)
 
-        generations = [1, 2, 3]
-        colors = {'mean': 'blue', '1st quartile': 'green',
-                  '3rd quartile': 'red'}
-        markers = {
-            'mean': 'p',
-            '1st quartile': 'h',
-            '3rd quartile': 'D'
-        }
+        lower_bound = np.percentile(neighborhood_distances, 25)
+        upper_bound = np.percentile(neighborhood_distances, 75)
+        emotion_percentiles[emotion_target] = (lower_bound, upper_bound)
 
-        for gen in generations:
-            gen_data = df[df['samples'].str.contains(f"Gen {gen}")]
-            if not gen_data.empty:
-                mean_distance = gen_data['distance'].mean()
-                first_quartile = gen_data['distance'].quantile(0.25)
-                third_quartile = gen_data['distance'].quantile(0.75)
+        plt.axhspan(lower_bound, upper_bound, color='lightgreen',
+                    alpha=0.3)
 
-                plt.scatter([gen], [mean_distance], color=colors['mean'],
-                            marker=markers['mean'], s=100, label=f'Mean Gen {gen}' if gen == 1 else "")
-                plt.scatter([gen], [first_quartile], color=colors['1st quartile'],
-                            marker=markers['1st quartile'], s=100, label=f'1st Quartile Gen {gen}' if gen == 1 else "")
-                plt.scatter([gen], [third_quartile], color=colors['3rd quartile'],
-                            marker=markers['3rd quartile'], s=100, label=f'3rd Quartile Gen {gen}' if gen == 1 else "")
-
-        # Filter out the neighborhood data for the plot
-        neighborhood_data = df[df['type'] == 'neighborhood']['distance']
-
-        # Calculate the range for the horizontal band
-        lower_bound = neighborhood_data.quantile(0.25)
-        upper_bound = neighborhood_data.quantile(0.75)
-
-        # Add a horizontal band across the plot
-        plt.axhspan(lower_bound, upper_bound, color='lightgreen', alpha=0.3)
-
-        # Adjusting the aesthetics of the plot
-        plt.title(f'Distance Distribution for {emotion_target}')
+        plt.title(f'Distance Distribution for {emotion_target.capitalize()}')
         plt.ylabel('Distance from Center')
-        plt.xticks(generations, [f'Model Gen {gen}' for gen in generations])
+        plt.xlabel('Generation')
         plt.grid(True)
-
-        # Show the plot
-        plt.legend(title='Type')
-        plt.savefig(emotion_dir.joinpath(f'dist_alt.png'))
-
+        plt.savefig(emotion_dir.joinpath('dist_alt.png'))
         plt.clf()
         plt.close()
+
+    all_df = pd.concat(all_data)
+
+    best_emotion = emotions[np.argmin(gen3_distances)]
+    median_emotion = emotions[np.argsort(
+        gen3_distances)[len(gen3_distances)//2]]
+    worst_emotion = emotions[np.argmax(gen3_distances)]
+
+    plot_data = all_df[all_df['emotion'].isin(
+        [best_emotion, median_emotion, worst_emotion])]
+
+    plt.figure(figsize=(12, 8))
+    sns_palette = sns.color_palette(
+        "Set3", n_colors=len(plot_data['emotion'].unique()))
+    ax = sns.boxplot(x='generation', y='distance', hue='emotion',
+                     data=plot_data, palette=sns_palette, hue_order=[worst_emotion, median_emotion, best_emotion], width=0.4, showfliers=False)
+
+    emotion_color_mapping = {emotion: color for emotion, color in zip(
+        [worst_emotion, median_emotion, best_emotion], sns_palette)}
+
+    for emotion, color in emotion_color_mapping.items():
+        lower_bound, upper_bound = emotion_percentiles[emotion]
+        plt.axhspan(lower_bound, upper_bound, facecolor=color,
+                    alpha=0.75)
+
+    plt.title('Distance Distribution Comparison')
+    plt.ylabel('Distance from Center')
+    plt.xlabel('Generation')
+    plt.grid(True)
+    handles, _ = ax.get_legend_handles_labels()
+    custom_labels = [f'worst emotion ({worst_emotion})',
+                     f'median emotion ({median_emotion})', f'best emotion ({best_emotion})']
+    plt.legend(handles, custom_labels,
+               title='Emotion Performance', loc='upper right')
+    plt.savefig(output_dir.joinpath('combined_dist.png'))
+    plt.clf()
+    plt.close()
 
 
 if __name__ == "__main__":
