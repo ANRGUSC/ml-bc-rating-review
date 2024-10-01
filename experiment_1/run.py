@@ -38,14 +38,14 @@ def get_embedding(sentences: List[str]):
 
 
 def main():
-    num_sentences = 20
+    num_sentences = 50
 
     # load fine_tune_jobs from .json file
     fine_tune_jobs = json.loads(thisdir.joinpath(
         "fine_tune_jobs.json").read_text())
     client = OpenAI(api_key=os.environ["OPENAI_API_KEY_KUBISHI"])
 
-    models = {0: "gpt-3.5-turbo"}
+    models = {}
     for k_fraction, fine_tune_job_id in fine_tune_jobs.items():
         # get trained model
         res = client.fine_tuning.jobs.retrieve(
@@ -85,39 +85,6 @@ def main():
             }
             for emotion in emotions
         ])
-
-    sentences = []
-    for i in range(num_sentences):
-        try:
-            examples = []
-            for example in random.choices(neighborhood, k=10):
-                examples.append({"role": "user", "content": prompt})
-                examples.append(
-                    {"role": "assistant", "content": example["text"]})
-            res = client.chat.completions.create(
-                model='gpt-3.5-turbo',
-                messages=[
-                    *examples,
-                    {"role": "user", "content": prompt}
-                ],
-            )
-            response = res.choices[0].message.content
-            sentences.append(response)
-        except Exception as e:
-            print(e)
-            print(
-                f"Error generating sentence {i+1}/{num_sentences} for k_fraction {k_fraction}\n\tmodel={fine_tuned_model}\n\prompt={prompt}")
-            continue
-    emotions = get_embedding(sentences)
-    all_sentences.extend([
-        {
-            "k_fraction": k_fraction,
-            "text": emotion["text"],
-            "type": "output-pe",
-            "emotion": emotion["emotion"].tolist(),
-        }
-        for emotion in emotions
-    ])
 
     thisdir.joinpath("all_sentences.json").write_text(
         json.dumps(all_sentences, indent=4), encoding="utf-8")
