@@ -1,0 +1,1 @@
+{"expert_distribution_method": "triangular", "user_distribution_method": "uniform", "aggregate_method": "average", "value_method": "l2_norm", "group_method": "permutation", "winning_method": "max_points", "num_features": 3, "num_experts": 2, "num_users": 10, "num_groups": 2, "num_rounds": 10000, "random_seed": 0}
