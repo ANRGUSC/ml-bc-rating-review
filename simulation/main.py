@@ -13,7 +13,6 @@ from helpers.group_func_helper import permutation_split
 from helpers.feature_func_helper import gaussian, uniform, triangular
 from helpers.value_func_helper import dot_product, l2_norm, l2_norm_mean, l2_norm_median, dot_product_mean, dot_product_median
 from helpers.winning_func_helper import max_points
-# Add a global input that controls numpy's random seed
 
 thisdir = pathlib.Path(__file__).parent.resolve()
 sim_results = thisdir / 'results'
@@ -118,23 +117,19 @@ def run_sim(savedir: pathlib.Path,
 
     # This sections grabs the necessary config functions
     users = config['user_distribution'](num_users, num_features)
-    # users = Feature_Methods.get_feature_generator(Feature_Methods.GAUSSIAN)(num_users, num_features, mean=0.5, std_dev=0.1)
 
     # experts are represented by a vector of features
     experts = config['expert_distribution'](num_experts, num_features)
 
     # aggregate function is average of user features
-    # aggregate = partial(np.mean, axis=0)
     aggregate = config['aggregate']
 
     # value function is max dot product of aggregate features and expert features
-    # value = lambda coalition: 0 if len(coalition) <= 0 else np.max(np.dot(experts, aggregate(coalition)))
     value_func = config['value']
 
-    # # Compute actual Shapley values
+    # OLD SHAPLEY CODE ---- Compute actual Shapley values
     # all_users = list(range(num_users))
-    # shapely_values = np.zeros(num_users)
-
+    # shapley_values = np.zeros(num_users)
     # for user in range(num_users):
     #     # iterate over all subsets without user
     #     for subset in all_subsets(all_users, exclude=[user]):
@@ -147,17 +142,13 @@ def run_sim(savedir: pathlib.Path,
     #         marginal_contribution = subset_with_user_value - subset_value
     #         # update user value
     #         weight = factorial(len(subset)) * factorial(num_users - len(subset) - 1) / factorial(num_users)
-    #         shapely_values[user] += weight * marginal_contribution
+    #         shapley_values[user] += weight * marginal_contribution
 
     # simulate protocol which estimates Shapley values by iteratively splitting users into two groups and asking experts to rank them
     # experts are asked to rank users in each group
     points = np.zeros(num_users)
 
-    round_data = pd.DataFrame()
-
-    for i in range(num_rounds):
-        # random permutation of users
-        # permutation = np.random.permutation(num_users)
+    for _ in range(num_rounds):
         # split users into groups
         groups = config['group'](num_users, num_groups)
 
@@ -169,37 +160,15 @@ def run_sim(savedir: pathlib.Path,
         for winning_group, points_won in winning_groups.items():
             points[groups[winning_group]] += points_won
 
-    #     current_rount = pd.DataFrame({
-    #         'user': list(range(num_users)),
-    #         'points_round_{}'.format(i+1): points
-    #     })
-
-    #     if round_data.empty:
-    #         round_data = current_rount
-    #     else:
-    #         round_data = round_data.merge(current_rount, on='user')
-
     savedir.mkdir(exist_ok=True, parents=True)
 
-    # round_data.to_csv(savedir / 'round_data.csv', index=False)
-
-    # plot actual Shapley values against points
     df = pd.DataFrame({
         'user': list(range(num_users)),
-        # 'shapley': shapely_values,
+        # OLD SHAPLEY CODE ---- plot actual Shapley values against points
+        # 'shapley': shapley_values,
         'points': points
     })
-
     df.to_csv(savedir / 'sim.csv')
-
-    # save stuff
-    # fig = px.scatter(
-    #     df, x='shapley', y='points',
-    #     hover_name='user',
-    #     template='plotly_white',
-    # )
-    # fig.update_traces(marker=dict(size=12))
-    # fig.write_image(str(savedir / 'shapley.png'))
 
     if save_config:
         frame = inspect.currentframe()
