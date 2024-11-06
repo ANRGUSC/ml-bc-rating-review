@@ -127,22 +127,22 @@ def run_sim(savedir: pathlib.Path,
     # value function is max dot product of aggregate features and expert features
     value_func = config['value']
 
-    # OLD SHAPLEY CODE ---- Compute actual Shapley values
-    # all_users = list(range(num_users))
-    # shapley_values = np.zeros(num_users)
-    # for user in range(num_users):
-    #     # iterate over all subsets without user
-    #     for subset in all_subsets(all_users, exclude=[user]):
-    #         # compute value of subset
-    #         subset_value = value_func(experts, users[list(subset)], aggregate)
-    #         # subset_value = ValueFunction.dot_product(users[list(subset)])
-    #         # compute value of subset with user
-    #         subset_with_user_value = value_func(experts, users[list(subset) + [user]], aggregate)
-    #         # compute marginal contribution of user
-    #         marginal_contribution = subset_with_user_value - subset_value
-    #         # update user value
-    #         weight = factorial(len(subset)) * factorial(num_users - len(subset) - 1) / factorial(num_users)
-    #         shapley_values[user] += weight * marginal_contribution
+    all_users = list(range(num_users))
+    shapley_values = np.zeros(num_users)
+    for user in range(num_users):
+        # iterate over all subsets without user
+        for subset in all_subsets(all_users, exclude=[user]):
+            # compute value of subset
+            subset_value = value_func(experts, users[list(subset)], aggregate)
+            # compute value of subset with user
+            subset_with_user_value = value_func(
+                experts, users[list(subset) + [user]], aggregate)
+            # compute marginal contribution of user
+            marginal_contribution = subset_with_user_value - subset_value
+            # update user value
+            weight = factorial(len(subset)) * factorial(num_users -
+                                                        len(subset) - 1) / factorial(num_users)
+            shapley_values[user] += weight * marginal_contribution
 
     # simulate protocol which estimates Shapley values by iteratively splitting users into two groups and asking experts to rank them
     # experts are asked to rank users in each group
@@ -164,11 +164,13 @@ def run_sim(savedir: pathlib.Path,
 
     df = pd.DataFrame({
         'user': list(range(num_users)),
-        # OLD SHAPLEY CODE ---- plot actual Shapley values against points
-        # 'shapley': shapley_values,
+        'shapley': shapley_values,
         'points': points
     })
     df.to_csv(savedir / 'sim.csv')
+    fig = px.scatter(df, x='shapley', y='points', hover_name='user', template='plotly_white')
+    fig.update_traces(marker=dict(size=12))
+    fig.write_image(str(savedir / 'shapley.png'))
 
     if save_config:
         frame = inspect.currentframe()
