@@ -62,33 +62,6 @@ def grouping_simulated_annealing(user_points, point_values, model_point, round_i
 	mid_point = len(users_shuffled) // 2
 	return users_shuffled[:mid_point], users_shuffled[mid_point:]
 
-def grouping_simulated_annealing_v2(user_points, point_values, model_point, round_i, num_of_rounds):
-	"""
-	Over time, assign more high-point users to user_group_1 while starting with random grouping.
-	"""
-	num_users = len(user_points)
-	# Calculate the proportion of high-scoring users to assign to group_1
-	progress_ratio = round_i / num_of_rounds  # Increases from 0 to 1 over the rounds
-	num_high_scorers_to_assign = int(progress_ratio * num_users)  # Number of guaranteed high-point users
-
-	# Get indices of users sorted by their point values (descending)
-	sorted_indices = np.argsort(-point_values)  # Negative for descending order
-
-	# Select the high scorers for group_1
-	high_scorers = sorted_indices[:num_high_scorers_to_assign]
-
-	# Randomly shuffle remaining users
-	remaining_users = sorted_indices[num_high_scorers_to_assign:]
-	np.random.shuffle(remaining_users)
-
-	# Combine high scorers with the remaining users to form user_group_1 and user_group_2
-	mid_point = len(remaining_users) // 2
-	user_group_1 = np.concatenate([high_scorers, remaining_users[:mid_point]])
-	user_group_2 = remaining_users[mid_point:]
-
-	return user_group_1, user_group_2
-
-
 def grouping_weighted_kmeans(user_points, point_values, model_point, round_i, num_of_rounds):
 	"""Group users using K-means clustering with point_values as sample weights."""
 	from sklearn.cluster import KMeans
@@ -114,8 +87,7 @@ evaluation_functions = {
 grouping_functions = {
 	'random': grouping_random,
 	'simulated_annealing': grouping_simulated_annealing,
-	'weighted_kmeans': grouping_weighted_kmeans,
-	'simulated_annealing_v2': grouping_simulated_annealing_v2
+	'weighted_kmeans': grouping_weighted_kmeans
 }
 
 def min_max_normalize(group):
