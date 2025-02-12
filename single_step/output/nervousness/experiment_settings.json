@@ -1,0 +1,33 @@
+{
+    "emotion_target": "nervousness",
+    "label_order": {
+        "nervousness": 0,
+        "remorse": 1,
+        "sadness": 2,
+        "love": 3,
+        "caring": 4,
+        "disappointment": 5,
+        "approval": 6,
+        "gratitude": 7,
+        "admiration": 8,
+        "grief": 9,
+        "optimism": 10,
+        "disapproval": 11,
+        "realization": 12,
+        "desire": 13,
+        "curiosity": 14,
+        "confusion": 15,
+        "anger": 16,
+        "embarrassment": 17,
+        "joy": 18,
+        "amusement": 19,
+        "disgust": 20,
+        "annoyance": 21,
+        "neutral": 22,
+        "relief": 24,
+        "fear": 25,
+        "excitement": 26,
+        "surprise": 27,
+        "pride": 28
+    }
+}

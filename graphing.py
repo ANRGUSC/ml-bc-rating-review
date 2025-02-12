@@ -6,6 +6,8 @@ from itertools import combinations
 from math import factorial
 import random
 from typing import Dict, Iterable, List, Tuple
+from scipy.stats import pearsonr
+from PIL import ImageColor
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -15,13 +17,10 @@ from matplotlib.animation import FuncAnimation
 
 thisdir = pathlib.Path(__file__).parent.absolute()
 
-# Evaluation Function Definitions
 def evaluation_l2_norm(point_a: np.ndarray, point_b: np.ndarray) -> float:
-	"""Evaluation function based on negative L2 norm (Euclidean distance)."""
 	return -np.linalg.norm(point_a - point_b)
 
 def evaluation_dot_product(point_a: np.ndarray, point_b: np.ndarray) -> float:
-	"""Evaluation function based on dot product."""
 	return np.dot(point_a, point_b)
 
 def evaluation_cosine_similarity(point_a: np.ndarray, point_b: np.ndarray) -> float:
@@ -30,27 +29,24 @@ def evaluation_cosine_similarity(point_a: np.ndarray, point_b: np.ndarray) -> fl
 	norm_a = np.linalg.norm(point_a)
 	norm_b = np.linalg.norm(point_b)
 	if norm_a == 0 or norm_b == 0:
-		return 0
+		return  0
+
 	point_a_normalized = point_a / norm_a
 	point_b_normalized = point_b / norm_b
-	# Compute cosine similarity
 	return np.dot(point_a_normalized, point_b_normalized)
 
-
 def grouping_random(user_points, point_values, model_point, round_i, num_of_rounds):
-	"""Hybrid grouping method: with 10% probability, group by Shapley values; else, random grouping."""
 	users_shuffled = np.random.permutation(len(user_points))
 	mid_point = len(users_shuffled) // 2
 	user_group_1 = users_shuffled[:mid_point]
 	user_group_2 = users_shuffled[mid_point:]
 	return user_group_1, user_group_2
 
-
 def grouping_simulated_annealing(user_points, point_values, model_point, round_i, num_of_rounds):
 	"""Reduces randomness in grouping over time, favoring higher point-valued agents."""
 	# Calculate the temperature parameter
 	temperature = 1 - (round_i / num_of_rounds)  # Decreases from 1 to 0 over rounds
-	probability = max(0.1, temperature)  # Ensure a minimum randomness of 10%
+	probability = max(0.35, temperature)  # Ensure a minimum randomness of 10%
 
 	if random.random() < probability:
 		# Random grouping
@@ -62,20 +58,41 @@ def grouping_simulated_annealing(user_points, point_values, model_point, round_i
 	mid_point = len(users_shuffled) // 2
 	return users_shuffled[:mid_point], users_shuffled[mid_point:]
 
-def grouping_weighted_kmeans(user_points, point_values, model_point, round_i, num_of_rounds):
-	"""Group users using K-means clustering with point_values as sample weights."""
-	from sklearn.cluster import KMeans
-	# Ensure point_values are non-negative
-	point_values = np.maximum(point_values, 0)
-	# Initialize KMeans with 2 clusters
-	kmeans = KMeans(n_clusters=2, random_state=round_i)
-	# Fit the model using sample weights
-	kmeans.fit(user_points, sample_weight=point_values)
-	labels = kmeans.labels_
-	# Separate users into two groups based on labels
-	group1 = np.where(labels == 0)[0]
-	group2 = np.where(labels == 1)[0]
-	return group1, group2
+def grouping_interleaved(user_points, point_values, model_point, round_i, num_of_rounds):
+    # Sort by point_values
+    sorted_indices = np.argsort(point_values)
+    
+    # Split into two halves: high-value and low-value
+    mid_point = len(sorted_indices) // 2
+    high_value_indices = sorted_indices[mid_point:]
+    low_value_indices = sorted_indices[:mid_point]
+    
+    # Shuffle each half
+    np.random.shuffle(high_value_indices)
+    np.random.shuffle(low_value_indices)
+    
+    # Interleave the two halves into two groups
+    group_1 = []
+    group_2 = []
+    
+    max_len = max(len(high_value_indices), len(low_value_indices))
+    for i in range(max_len):
+        if i < len(high_value_indices):
+            # Assign high-value user to one group (e.g., Group 1 if i is even, Group 2 if i is odd)
+            if i % 2 == 0:
+                group_1.append(high_value_indices[i])
+            else:
+                group_2.append(high_value_indices[i])
+        
+        if i < len(low_value_indices):
+            # Assign low-value user to the opposite group of the high-value user chosen above
+            if i % 2 == 0:
+                group_2.append(low_value_indices[i])
+            else:
+                group_1.append(low_value_indices[i])
+    
+    return np.array(group_1), np.array(group_2)
+
 
 
 evaluation_functions = {
@@ -87,7 +104,7 @@ evaluation_functions = {
 grouping_functions = {
 	'random': grouping_random,
 	'simulated_annealing': grouping_simulated_annealing,
-	'weighted_kmeans': grouping_weighted_kmeans
+	'interleaved': grouping_interleaved
 }
 
 def min_max_normalize(group):
@@ -105,18 +122,28 @@ def create_individual_shapley_plots(df_points_avg_last_round):
 		# Filter data for the current combination
 		combination_data = df_points_avg_last_round[df_points_avg_last_round['Combined'] == combination]
 
+		pearson_corr, _ = pearsonr(combination_data['Points'], combination_data['Real Shapley Value'])
 		# Generate scatter plot
 		shapley_fig = px.scatter(
-		combination_data,
-		x='Points',
-		y='Real Shapley Value',
-		color='Combined',  # This will still be unique since we're filtering by combination
-		title=f'Shapley vs Points for {combination}',
-		labels={
-			'Points': 'Normalized Points',
-			'Real Shapley Value': 'Normalized Real Shapley Value'
-		},
-		template='plotly_white'
+			combination_data,
+			x='Points',
+			y='Real Shapley Value',
+			color='Combined',  # This will still be unique since we're filtering by combination
+			title=f'Shapley vs Points for {combination}',
+			labels={
+				'Points': 'Normalized Points',
+				'Real Shapley Value': 'Normalized Real Shapley Value'
+			},
+			template='plotly_white'
+		)
+
+		shapley_fig.add_annotation(
+			x=0.5,
+			y=0.9,
+			xref='paper',
+			yref='paper',
+			text=f"Pearson Correlation: {pearson_corr:.2f}",
+			showarrow=False
 		)
 
 		# Save each plot as a separate PNG file
@@ -385,7 +412,8 @@ def simulation(model_point: np.ndarray,
 			   num_of_rounds: int = 100,
 			   delta: float = 0.1,
 			   use_real_shapley: bool = False,
-			   do_estimation: bool = True) -> Tuple[list, np.ndarray, np.ndarray, list]:
+			   do_estimation: bool = True,
+			   error_probability: float = 0.1) -> Tuple[list, np.ndarray, np.ndarray, list]:
 	"""Simulate the movement of the model point over rounds.
 
 	Args:
@@ -405,6 +433,8 @@ def simulation(model_point: np.ndarray,
 		point_values = np.ones(len(user_points))
 
 	points_value_history: list = [deepcopy(point_values)]
+	incorrect_choice_count = 0
+
 	for round_i in range(num_of_rounds):
 		user_group_1, user_group_2 = grouping_func(
 			user_points, point_values, model_point, round_i, num_of_rounds)
@@ -418,28 +448,39 @@ def simulation(model_point: np.ndarray,
 		candidate_point_1 = model_point + delta * (centroid_1 - model_point)
 		candidate_point_2 = model_point + delta * (centroid_2 - model_point)
 
-		# let new model point be the one closer to the expert point
 		value_1 = evaluation_func(candidate_point_1, expert_point)
 		value_2 = evaluation_func(candidate_point_2, expert_point)
 		value_cur = evaluation_func(model_point, expert_point)
 
 		if value_cur >= value_1 and value_cur >= value_2:
-			# both points are further from expert point than current model point
-			# don't update model point
 			pass
-		elif value_1 > value_2:
-			model_point = candidate_point_1
-			if do_estimation and not use_real_shapley:  # give user group 1 a point
-				point_values[user_group_1] += 1
 		else:
-			model_point = candidate_point_2
-			if do_estimation and not use_real_shapley:  # give user group 2 a point
-				point_values[user_group_2] += 1
+			incorrect_choice = np.random.rand() < error_probability
+			if value_1 > value_2:
+				if incorrect_choice:
+					incorrect_choice_count += 1
+					model_point = candidate_point_2
+					if do_estimation and not use_real_shapley:
+						point_values[user_group_2] += 1
+				else:
+					model_point = candidate_point_1
+					if do_estimation and not use_real_shapley:
+						point_values[user_group_1] += 1
+			else:
+				if incorrect_choice:
+					incorrect_choice_count += 1
+					model_point = candidate_point_1
+					if do_estimation and not use_real_shapley:
+						point_values[user_group_1] += 1
+				else:
+					model_point = candidate_point_2
+					if do_estimation and not use_real_shapley:
+						point_values[user_group_2] += 1
 
 		model_point_history.append(model_point)
 		points_value_history.append(deepcopy(point_values))
 
-	return model_point_history, points_value_history
+	return model_point_history, points_value_history, ((incorrect_choice_count / 100) * 100)
 
 def scale_points_values(points_round, minval, maxval):
 	""" Scale Point values linearly based on provided min and max values. """
@@ -447,19 +488,6 @@ def scale_points_values(points_round, minval, maxval):
 		return points_round
 	normalized = (points_round - np.min(points_round)) / (np.max(points_round) - np.min(points_round))
 	return normalized * (maxval - minval) + minval
-
-def main():
-	model_point, expert_point, user_points = init_points_uniform(2)
-	model_point_history, _ = simulation(
-		model_point, expert_point, user_points, use_real_shapley=False)
-	# model_point_history_real, shapley_value_history = simulation(
-	#     model_point, expert_point, user_points, use_real_shapley=True)
-	animate(
-		[model_point_history],
-		user_points, expert_point,
-		colors=['purple', 'orange'],
-	)
-
 
 def run_movie(num_users: int,
 			  num_experts: int,
@@ -484,7 +512,7 @@ def run_movie(num_users: int,
 				expert_point = deepcopy(init_expert_point)
 				user_points = deepcopy(init_user_points)
 
-				model_history, points_history = simulation(
+				model_history, points_history, incorrect_candidate_count = simulation(
 					model_point,
 					expert_point, 
 					user_points, 
@@ -510,13 +538,22 @@ def run_movie(num_users: int,
 
 				shapley_values = get_shapley_values(user_points, expert_point, selected_eval_func)
 
-				scaled_points_history = np.array([scale_points_values(round_vals, np.min(shapley_values), np.max(shapley_values)) for round_vals in points_history])
+				# scaled_points_history = np.array([scale_points_values(round_vals, np.min(shapley_values), np.max(shapley_values)) for round_vals in points_history])
 				# Compute Shapley Accuracy: Average Shapley error over all agents and rounds
 				rows_points.extend([
 					[grouping_name, eval_func_name, run_i, i, agent_num, sv, rv]
-					for i, round_point_values in enumerate(scaled_points_history)
+					for i, round_point_values in enumerate(points_history)
 					for agent_num, (sv, rv) in enumerate(zip(round_point_values, shapley_values))
 				])
+
+				# Get the last round of scaled points history
+				last_round_points = points_history[-1]
+
+				# Compute Pearson Correlation between Shapley Values and last round of points
+				if np.all(last_round_points == last_round_points[0]) or np.all(shapley_values == shapley_values[0]):
+					pearson_corr = np.nan
+				else:
+					pearson_corr, _ = pearsonr(last_round_points, shapley_values)
 
 				stats.append({
 					'Grouping Function': grouping_name,
@@ -524,14 +561,19 @@ def run_movie(num_users: int,
 					'Run': run_i,
 					'Starting Distance': starting_distance,
 					'Convergence Speed (rounds)': rounds_to_converge,
-					'Convergence Accuracy (final distance)': final_distance
+					'Convergence Accuracy (final distance)': final_distance,
+					'Pearson Correlation': pearson_corr,
+					'Incorrect Candidate Selection (%)': incorrect_candidate_count
 				})
 
 	# Convert stats to DataFrame for display
 	df_stats = pd.DataFrame(stats)
+	df_stats.to_csv('simulation_stats.csv', index=False)
+
+	df_stats['Combined'] = df_stats['Grouping Function'] + ', ' + df_stats['Evaluation Function']
 	average_stats = df_stats.groupby(['Grouping Function', 'Evaluation Function']).mean(numeric_only=True).reset_index()
-	print("\nAverage Simulation Stats Across all Runs:")
-	print(average_stats.to_string(index=False))
+	average_stats = average_stats.drop(columns=['Run'])
+	average_stats.to_csv('average_simulation_stats.csv', index=False)
 
 	df_model = pd.DataFrame(rows_model, columns=["Grouping Function", "Evaluation Function", "Run", "Round", "Distance"])
 	df_model_avg = df_model.groupby(['Grouping Function', 'Evaluation Function', 'Round']).mean().reset_index()
@@ -540,22 +582,53 @@ def run_movie(num_users: int,
 	create_distances_by_grouping(df_model_avg)
 
 	# Save a .png called distances.png that shows average distance to expert point over all rounds with a line for each evaluation function
-	distance_fig = px.line(df_model_avg, x='Round', y='Distance', color='Combined', template='plotly_white', title='Average Distance to Expert Point Over Rounds')
+	distance_fig = px.line(df_model_avg, x='Round', y='Distance', color='Evaluation Function', line_dash='Grouping Function', template='plotly_white', title='Average Distance to Expert Point Over Rounds')
 	filename = os.path.join('distance_plots', 'combined_distances.png')
 	distance_fig.write_image(filename)
 
-	df_points = pd.DataFrame(rows_points, columns=["Grouping Function", "Evaluation Function", "Run", "Round", "Agent", "Points", "Real Shapley Value"])
-	df_points_avg = df_points.groupby(['Grouping Function', 'Evaluation Function', 'Agent', 'Round'])[['Points', 'Real Shapley Value']].mean().reset_index()
+	os.makedirs('pearson_plots', exist_ok=True)
+	df_stats['Inverted Pearson'] = df_stats['Pearson Correlation'].replace(0, np.nan).rdiv(1)
 
-	# filter only the last round for each evaluation function
-	df_points_avg_last_round = df_points_avg[df_points_avg['Round'] == num_of_rounds - 1]
-	df_points_avg_last_round = df_points_avg_last_round.groupby(['Grouping Function', 'Evaluation Function']).apply(min_max_normalize)
-	df_points_avg_last_round['Combined'] = df_points_avg_last_round['Grouping Function'] + ', ' + df_points_avg_last_round['Evaluation Function']
+	df_agg = df_stats.groupby('Combined').agg(
+		mean_inverted_pearson=('Inverted Pearson', 'mean'),
+		std_inverted_pearson=('Inverted Pearson', 'std'),
+		mean_distance=('Convergence Accuracy (final distance)', 'mean'),
+		std_distance=('Convergence Accuracy (final distance)', 'std')
+	).reset_index()
 
-	create_individual_shapley_plots(df_points_avg_last_round)
+	df_agg[['Grouping Function', 'Evaluation Function']] = df_agg['Combined'].str.split(', ', expand=True)
 
-	# Print the Shapley values DataFrame for debugging
-	print(df_points_avg_last_round[df_points_avg_last_round['Evaluation Function'].isin(['dot_product', 'l2_norm', 'cosine_similarity'])].to_string(index=False))
+	# Remove balanced l2 norm combination 
+	avg_fig_with_error = px.scatter(
+		df_agg,
+		x='mean_distance',
+		y='mean_inverted_pearson',
+		color='Evaluation Function',
+		symbol='Grouping Function',
+		title='Average Pearson Correlation vs. Final Distance to Expert Point',
+		template='plotly_white',
+		error_x='std_distance',
+		error_y='std_inverted_pearson'
+	)
+
+	for trace in avg_fig_with_error.data:
+		if hasattr(trace, 'marker') and hasattr(trace.marker, 'color'):
+			marker_color = trace.marker.color
+
+			# Convert the marker color to RGBA. The marker_color could be a named color,
+			# a HEX code, or an RGB/RGBA string. The following approach handles common hex or named colors:
+			r, g, b = ImageColor.getrgb(marker_color)
+			# Create a transparent version (30% opacity in this example)
+			error_color = f"rgba({r},{g},{b},0.2)"
+
+			if trace.error_x:
+				trace.error_x.color = error_color
+			if trace.error_y:
+				trace.error_y.color = error_color
+
+	filename = os.path.join('pearson_plots', 'average_pearson_vs_distance.png')
+	avg_fig_with_error.write_image(filename)
+
 
 
 if __name__ == "__main__":

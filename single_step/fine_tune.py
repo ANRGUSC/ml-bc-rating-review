@@ -1,37 +1,44 @@
 import json
-import random
-import time
+import config
 import numpy as np
 import pathlib
 from openai import OpenAI
-import os
+import sys
 from dotenv import load_dotenv
 
 load_dotenv()
 
 thisdir = pathlib.Path(__file__).parent.absolute()
-sentences = json.loads(thisdir.joinpath("model_outputs.json").read_text())
 
-label_order = {emotion["label"]: i for i,
-               emotion in enumerate(sentences[0]["emotion"])}
-for sentence in sentences:
-    sentence["emotion"] = sorted(
-        sentence["emotion"], key=lambda x: label_order[x["label"]])
+def main(emotion_target):
+    outputdir = thisdir.joinpath(f"output/{emotion_target}")
+    outputdir.mkdir(parents=True, exist_ok=True)
 
-# convert emotion into a numpy array in the order of the label_order
-sentence_arrays = [
-    {
-        "text": sentence["text"],
-        "emotion": np.array([emotion["score"] for emotion in sentence["emotion"]])
-    }
-    for sentence in sentences
-]
-prompt = "write a reddit comment."
+    sentences = json.loads(thisdir.joinpath("model_outputs.json").read_text())
 
+    label_order = {emotion_target: 0}
+    for i, emotion in enumerate(sentences[0]["emotion"], start=1):
+        if emotion["label"] not in label_order:
+            label_order[emotion["label"]] = i
 
-def main():
-    # pick a random sentence
-    sentence = random.choice(sentence_arrays)
+    settings_path = outputdir.joinpath('experiment_settings.json')
+    with open(settings_path, 'w') as file:
+        json.dump({'emotion_target': emotion_target,
+                  'label_order': label_order}, file, indent=4)
+
+    # convert emotion into a numpy array in the order of the label_order
+    sentence_arrays = [
+        {
+            "text": sentence["text"],
+            "emotion": np.array([emotion["score"] for emotion in sorted(sentence["emotion"], key=lambda x: label_order[x["label"]])])
+        }
+        for sentence in sentences
+    ]
+
+    sorted_sentence_arrays = sorted(
+        sentence_arrays, key=lambda x: x["emotion"][0], reverse=True)
+    
+    sentence = sorted_sentence_arrays[0]
 
     # get k nearest neighbors to the sentence
     k = 100
@@ -41,7 +48,7 @@ def main():
     # get the indices of the k nearest neighbors
     neighborhood = np.argsort(distances)[:k+1]
 
-    neighborhood_file = thisdir.joinpath("neighborhood.json")
+    neighborhood_file = outputdir.joinpath("neighborhood.json")
     neighborhood_file.write_text(
         json.dumps(
             [
@@ -76,7 +83,7 @@ def main():
         lines = [
             json.dumps({
                 "messages": [
-                    {"role": "user", "content": prompt},
+                    {"role": "user", "content": config.prompt},
                     {"role": "assistant",
                         "content": sentence_arrays[i]["text"]}
                 ]
@@ -84,18 +91,15 @@ def main():
             for i in nearest_neighbors[:k_fraction]
         ]
 
-        fine_tuning_file = thisdir.joinpath(
-            "fine_tuning_files", f"{k_fraction}.jsonl")
-        fine_tuning_file.parent.mkdir(exist_ok=True)
+        fine_tuning_file = outputdir.joinpath(f"fine_tuning_{k_fraction}.jsonl")
         fine_tuning_file.write_text("\n".join(lines), encoding="utf-8")
 
-        client = OpenAI(api_key=os.environ["OPENAI_API_KEY_KUBISHI"])
-        res = client.files.create(
+        res = config.client.files.create(
             file=fine_tuning_file.open("rb"),
             purpose="fine-tune"
         )
 
-        res = client.fine_tuning.jobs.create(
+        res = config.client.fine_tuning.jobs.create(
             training_file=res.id,
             model="gpt-3.5-turbo"
         )
@@ -105,10 +109,12 @@ def main():
 
         fine_tune_jobs[k_fraction] = res.id
 
-    fine_tune_jobs_file = thisdir.joinpath("fine_tune_jobs.json")
+    fine_tune_jobs_file = outputdir.joinpath("fine_tune_jobs.json")
     fine_tune_jobs_file.write_text(json.dumps(
         fine_tune_jobs, indent=4), encoding="utf-8")
 
 
 if __name__ == "__main__":
-    main()
+    if (len(sys.argv) > 1):
+         emotion_target = sys.argv[1]
+    main(emotion_target)

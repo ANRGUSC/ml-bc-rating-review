@@ -1,71 +1,58 @@
-import pathlib
+import os
+import sys
 import json
 import numpy as np
 import pandas as pd
-import config
-import plotly.express as px
+import seaborn as sns
+import matplotlib.pyplot as plt
+import dotenv
+import pathlib
 
-
+dotenv.load_dotenv()
 thisdir = pathlib.Path(__file__).parent.absolute()
-settings_path = thisdir.joinpath('experiment_settings.json')
 
-with open(settings_path, 'r') as file:
-    settings = json.load(file)
+def main(emotion_target, output_name):
+    output_dir = thisdir.joinpath(output_name)
+    emotion_dir = output_dir.joinpath(emotion_target)
 
-emotion_target = settings['emotion_target']
+    with open(emotion_dir.joinpath('neighborhood.json'), 'r') as file:
+        neighborhood = json.load(file)
 
-
-def main():
-    neighborhood = json.loads(thisdir.joinpath(
-        f"output/{emotion_target}/neighborhood.json").read_text())
-    output_sentence_1 = json.loads(
-        thisdir.joinpath(f"output/{emotion_target}/all_sentences_1.json").read_text())
-    output_sentence_2 = json.loads(
-        thisdir.joinpath(f"output/{emotion_target}/all_sentences_2.json").read_text())
-    output_sentence_3 = json.loads(
-        thisdir.joinpath(f"output/{emotion_target}/all_sentences_3.json").read_text())
-
-    # get center of neighborhood
-    center = np.mean([sentence["emotion"]
-                     for sentence in neighborhood[1:]], axis=0)
+    center = np.mean([np.array(sentence["emotion"]) for sentence in neighborhood], axis=0)
 
     rows = []
 
-    for i, sentence in enumerate(neighborhood[1:], start=1):
-        distance = np.linalg.norm(center - np.array(sentence["emotion"]))
-        rows.append([i, "neighborhood", "N/A", distance])
+    neighborhood_distances = [np.linalg.norm(
+        center - np.array(sentence["emotion"])) for sentence in neighborhood[1:]]
 
-    for i, sentence in enumerate(output_sentence_1, start=1):
-        distance = np.linalg.norm(center - np.array(sentence["emotion"]))
-        label = f"model_gen={sentence['model_gen']}" if sentence["type"] == "output-ft" else "N/A"
-        rows.append([i, sentence["type"], label, distance])
+    for gen in range(1, 4):
+        json_path = emotion_dir.joinpath(f"all_sentences_{gen}.json")
+        
+        output_sentences = json.loads(json_path.read_text())
+        output_distances = [np.linalg.norm(
+            center - np.array(sentence["emotion"])) for sentence in output_sentences]
+        
+        rows.extend([(idx, f"Gen {gen}", dist, emotion_target) 
+                     for idx, dist in zip(range(1, len(output_distances) + 1), output_distances)])
 
-    for i, sentence in enumerate(output_sentence_2, start=1):
-        distance = np.linalg.norm(center - np.array(sentence["emotion"]))
-        label = f"model_gen={sentence['model_gen']}" if sentence["type"] == "output-ft" else "N/A"
-        rows.append([i, sentence["type"], label, distance])
+    df = pd.DataFrame(rows, columns=["num", "generation", "distance", "emotion"])
 
-    for i, sentence in enumerate(output_sentence_3, start=1):
-        distance = np.linalg.norm(center - np.array(sentence["emotion"]))
-        label = f"model_gen={sentence['model_gen']}" if sentence["type"] == "output-ft" else "N/A"
-        rows.append([i, sentence["type"], label, distance])
+    plt.figure(figsize=(12, 6))
+    sns.boxplot(x='generation', y='distance', data=df, hue="generation", width=0.3, showfliers=False)
 
-    df = pd.DataFrame(rows, columns=["num", "type", "samples", "distance"])
-    print(df)
-    fig = px.box(
-        df,
-        x="samples",
-        y="distance",
-        color="type",
-        title="Distance from target sentence",
-        points="all",
-        template="plotly_white",
-    )
-    savepath = thisdir.joinpath(
-        f"output/{emotion_target}/distance.html")
-    savepath.parent.mkdir(parents=True, exist_ok=True)
-    fig.write_html(savepath)
+    lower_bound = np.percentile(neighborhood_distances, 25)
+    upper_bound = np.percentile(neighborhood_distances, 75)
 
+    plt.axhspan(lower_bound, upper_bound, color='lightgreen', alpha=0.3)
+
+    plt.title(f'Distance Distribution for {emotion_target.capitalize()}')
+    plt.ylabel('Distance from Center')
+    plt.xlabel('Generation')
+    plt.grid(True)
+    plt.savefig(emotion_dir.joinpath('dist.png'))
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) > 1:
+        emotion_target = sys.argv[1]
+        output_name = sys.argv[2]
+    main(emotion_target, output_name)

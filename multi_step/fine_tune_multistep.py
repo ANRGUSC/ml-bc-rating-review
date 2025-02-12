@@ -1,78 +1,112 @@
 import json
-import random
 import sys
 import pathlib
 import config
+import random
 from dotenv import load_dotenv
 
 load_dotenv()
 
 thisdir = pathlib.Path(__file__).parent.absolute()
-settings_path = thisdir.joinpath('experiment_settings.json')
 
-with open(settings_path, 'r') as file:
-    settings = json.load(file)
+def main(emotion_target, model_gen):
+    outputdir = thisdir.joinpath(f"output/{emotion_target}")
+    
+    fine_tuning_dir = outputdir.joinpath("fine_tuning_files")
+    
+    # 1) Read experiment settings to get emotion_target and the segments
+    settings_path = outputdir.joinpath('experiment_settings.json')
+    with settings_path.open('r', encoding="utf-8") as f:
+        settings = json.load(f)
 
-emotion_target = settings['emotion_target']
+    best_model_index = settings[f'best_model_{model_gen - 1}']
+    new_blocklist = settings[f'segments_{model_gen - 1}'][best_model_index - 1]
+    old_blocklist = settings['blocklist']
+    segments_to_exclude = new_blocklist + old_blocklist
 
-sentences = json.loads(thisdir.joinpath("model_outputs.json").read_text())
-best_model = json.loads(thisdir.joinpath("best_model_id.json").read_text())
+    # 2) Read the best model from the previous round
+    best_model_file = fine_tuning_dir.joinpath(f"best_model_id_{model_gen - 1}.json")
+    best_model = json.loads(best_model_file.read_text())  # e.g. "ft:gpt-3.5-turbo-<job-id>"
 
 
-def main(model_gen):
-    neighborhood = json.loads(
-        thisdir.joinpath(f"output/{emotion_target}/neighborhood.json").read_text())
+    neighborhood_file = outputdir.joinpath("neighborhood.json")
+    neighborhood = json.loads(neighborhood_file.read_text())
 
-    # get k nearest neighbors to the sentence
-    k = 100
+    nearest_neighbors = neighborhood[1:]
+    filtered_nearest_neighbors = [neighbor for neighbor in nearest_neighbors if neighbor["index"] not in set(segments_to_exclude)]
+    
+    random.shuffle(filtered_nearest_neighbors)
 
-    # shuffle the neighborhood
-    random.shuffle(neighborhood)
-    nearest_neighbors = neighborhood
+    # 3) Split the neighborhood into 3 segments
+    num_segments = 3
+    k = len(filtered_nearest_neighbors)
+    segment_size = k // num_segments
+    segments = []
+    for i in range(num_segments):
+        start = i * segment_size
+        end = start + segment_size
+        segments.append(filtered_nearest_neighbors[start:end])
+        
+    segment_indices = [[n["index"] for n in seg] for seg in segments]
 
-    k_fractions = [int(k*1/3), int(k*1/3), int(k*1/3)]
-    k_fractions = [f for f in k_fractions if f >= 10]
+    # write segments to settings file
+    settings[f'segments_{model_gen}'] = segment_indices
+    with settings_path.open('w', encoding="utf-8") as f:
+        json.dump(settings, f, indent=4)
+    
+    # 5) Fine-tune each sub-model (3 sub-models) using the selected segments
     fine_tune_jobs = {}
-    current_line = 0
-    for k_fraction in k_fractions:
-        lines = [
-            json.dumps({
-                "messages": [
-                    {"role": "user", "content": config.prompt},
-                    {"role": "assistant",
-                        "content": neighbor["text"]}
-                ]
-            })
-            for neighbor in nearest_neighbors[current_line:current_line+k_fraction]
-        ]
-        current_line += k_fraction
+    for i in range(num_segments):
+        # This is the list of original indices that belong to this segment
+        curr_segment_idx = segment_indices[i]  # e.g. [42, 77, 123, ...]
 
-        fine_tuning_file = thisdir.joinpath(
-            "fine_tuning_files", f"model_1_{current_line/33}.jsonl")
-        fine_tuning_file.parent.mkdir(exist_ok=True)
+        # Build training lines by filtering neighborhood for matching "index"
+        lines = []
+        for neighbor in neighborhood:
+            if neighbor.get("index") in curr_segment_idx:
+                # We found a neighbor that belongs to this segment
+                lines.append(json.dumps({
+                    "messages": [
+                        {"role": "user", "content": config.prompt},
+                        {"role": "assistant", "content": neighbor["text"]}
+                    ]
+                }))
+
+        # Write the lines to a .jsonl file        
+        fine_tuning_file = fine_tuning_dir.joinpath(f"model_{model_gen}_sub_{i + 1}.jsonl")
         fine_tuning_file.write_text("\n".join(lines), encoding="utf-8")
 
-        res = config.client.files.create(
+        # Upload the file
+        res_file = config.client.files.create(
             file=fine_tuning_file.open("rb"),
             purpose="fine-tune"
         )
 
-        res = config.client.fine_tuning.jobs.create(
-            training_file=res.id,
+        # Create a fine-tuning job using the best_model
+        res_ft = config.client.fine_tuning.jobs.create(
+            training_file=res_file.id,
             model=best_model
         )
 
-        print(f"Fine-tuning with model {current_line/33}")
-        print(res)
+        print(f"[Round {model_gen}] Fine-tuning sub-model #{i} from base: {best_model}")
+        print(res_ft)
+        fine_tune_jobs[str(i + 1)] = res_ft.id
 
-        fine_tune_jobs[current_line] = res.id
+    # 6) Save the fine-tuning job IDs for reference
+    fine_tune_jobs_file = fine_tuning_dir.joinpath(f"fine_tune_jobs_{model_gen}.json")
+    fine_tune_jobs_file.write_text(
+        json.dumps(fine_tune_jobs, indent=4),
+        encoding="utf-8"
+    )
 
-    fine_tune_jobs_file = thisdir.joinpath(f"fine_tune_jobs_{model_gen}.json")
-    fine_tune_jobs_file.write_text(json.dumps(
-        fine_tune_jobs, indent=4), encoding="utf-8")
+    settings['blocklist'] = segments_to_exclude
+    with settings_path.open('w', encoding="utf-8") as f:
+        json.dump(settings, f, indent=4)
 
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        model_gen = sys.argv[1]
-    main(model_gen)
+        emotion_target = sys.argv[1]
+        model_gen = int(sys.argv[2])
+
+    main(emotion_target, model_gen)

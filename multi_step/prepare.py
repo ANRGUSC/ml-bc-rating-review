@@ -2,17 +2,21 @@ from transformers import pipeline, AutoTokenizer
 import json
 import pathlib
 import pandas as pd
+import torch
 
 thisdir = pathlib.Path(__file__).parent.absolute()
 
 tokenizer = AutoTokenizer.from_pretrained("SamLowe/roberta-base-go_emotions")
+
+device = 0 if torch.cuda.is_available() else -1
 
 classifier = pipeline(
     task="text-classification",
     model="SamLowe/roberta-base-go_emotions",
     tokenizer=tokenizer,
     truncation=True,
-    top_k=None
+    top_k=None,
+    device=device
 )
 
 

@@ -6,20 +6,18 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 import dotenv
-
-from fine_tune import prompt, sentence_arrays, label_order
-# from prepare import classifier
+import sys
 
 dotenv.load_dotenv()
 
 thisdir = pathlib.Path(__file__).parent.absolute()
 
-
-def main():
-    neighborhood = json.loads(thisdir.joinpath(
+def main(emotion_target):
+    emotiondir = thisdir.joinpath(f"output/{emotion_target}")
+    neighborhood = json.loads(emotiondir.joinpath(
         "neighborhood.json").read_text())
     output_sentences = json.loads(
-        thisdir.joinpath("all_sentences.json").read_text())
+        emotiondir.joinpath("all_sentences.json").read_text())
 
     # Compute the center of the neighborhood
     center = np.mean([sentence["emotion"]
@@ -67,10 +65,13 @@ def main():
     plt.legend(title="Data Description", loc="upper right")
 
     # Save the plot
-    savepath = thisdir.joinpath("output/distance.png")
+    savepath = emotiondir.joinpath("distance.png")
     savepath.parent.mkdir(parents=True, exist_ok=True)
     plt.savefig(savepath)
 
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) > 1:
+        emotion_target = sys.argv[1]
+        
+    main(emotion_target)
