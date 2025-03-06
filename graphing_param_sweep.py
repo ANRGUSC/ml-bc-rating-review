@@ -67,74 +67,12 @@ def parameterSweep(num_users_list: List[int],
     df_combined_model.to_csv("param_sweep_stats/combined_model_stats.csv", index=False)
     
     # Aggregate results across runs (average the metrics for each parameter combination)
-    df_avg = df_combined_stats.groupby(['num_users', 'num_groups']).agg({
+    df_avg = df_combined_stats.groupby(['Grouping Function', 'Evaluation Function', 'num_users', 'num_groups']).agg({
         'Pearson Correlation': 'mean',
         'Convergence Accuracy (final distance)': 'mean'
     }).reset_index()
     df_avg.to_csv("param_sweep_stats/aggregated_stats.csv", index=False)
-    
-    # Create plots in a separate folder
-    os.makedirs("param_sweep_plots", exist_ok=True)
-    
-    # Plot 1: Pearson Coefficient vs. Number of Users
-    fig_pearson = px.line(
-        df_avg,
-        x='num_users',
-        y='Pearson Correlation',
-        color='num_groups',
-        markers=True,
-        labels={
-            'num_users': 'Number of Users',
-            'Pearson Correlation': 'Avg Pearson Coefficient',
-            'num_groups': 'Number of Groups'
-        },
-        title='Pearson Coefficient vs. Number of Users'
-    )
-    fig_pearson.write_image("param_sweep_plots/pearson_vs_users.png")
-    
-    # Plot 2: Convergence Distance vs. Number of Users
-    fig_distance = px.line(
-        df_avg,
-        x='num_users',
-        y='Convergence Accuracy (final distance)',
-        color='num_groups',
-        markers=True,
-        labels={
-            'num_users': 'Number of Users',
-            'Convergence Accuracy (final distance)': 'Avg Convergence Distance',
-            'num_groups': 'Number of Groups'
-        },
-        title='Convergence Distance vs. Number of Users'
-    )
-    fig_distance.write_image("param_sweep_plots/distance_vs_users.png")
-    
-    # Plot 3: Heatmap for Pearson Coefficient
-    pivot_pearson = df_avg.pivot(index='num_users', columns='num_groups', values='Pearson Correlation')
-    fig_heat_pearson = px.imshow(
-        pivot_pearson,
-        labels={
-            "x": "Number of Groups",
-            "y": "Number of Users",
-            "color": "Avg Pearson Coefficient"
-        },
-        title="Heatmap: Avg Pearson Coefficient",
-        aspect="auto"
-    )
-    fig_heat_pearson.write_image("param_sweep_plots/heatmap_pearson.png")
-    
-    # Plot 4: Heatmap for Convergence Distance
-    pivot_distance = df_avg.pivot(index='num_users', columns='num_groups', values='Convergence Accuracy (final distance)')
-    fig_heat_distance = px.imshow(
-        pivot_distance,
-        labels={
-            "x": "Number of Groups",
-            "y": "Number of Users",
-            "color": "Avg Convergence Distance"
-        },
-        title="Heatmap: Avg Convergence Distance",
-        aspect="auto"
-    )
-    fig_heat_distance.write_image("param_sweep_plots/heatmap_distance.png")
+
 
 def main():
     # Define the parameter ranges for the sweep
@@ -153,3 +91,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
+    import plot_param_sweep
+    plot_param_sweep.main()
