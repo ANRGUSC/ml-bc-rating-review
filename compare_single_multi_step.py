@@ -64,14 +64,15 @@ improvement_bar_chart_path = "multi_step_improvement.png"
 
 # Set up figure for grouped bar chart (Single-Step vs Multi-Step Distance)
 plt.figure(figsize=(14, 6))
-sns.barplot(x="Emotion", y="Single-Step Distance", data=df_results, color="blue", label="Single-Step")
-sns.barplot(x="Emotion", y="Multi-Step Distance", data=df_results, color="orange", label="Multi-Step")
+colors = sns.color_palette("Set1", 2)
+sns.barplot(x="Emotion", y="Single-Step Distance", data=df_results, color=colors[0], label="Single-Step")
+sns.barplot(x="Emotion", y="Multi-Step Distance", data=df_results, color=colors[1], label="Multi-Step")
 
 # Formatting
 plt.xticks(rotation=90)
 plt.ylabel("Distance to Target Neighborhood")
 plt.xlabel("Emotion")
-plt.title("Single-Step vs Multi-Step Distance Comparison")
+plt.title("Single-Step vs Multi-Step Distance Comparison in the Final Iteration")
 plt.legend()
 plt.grid(axis="y")
 

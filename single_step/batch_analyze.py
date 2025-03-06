@@ -99,7 +99,7 @@ def generate_disappointment_optimism_gratitude_plot(all_data, emotion_percentile
     plot_data = all_df[all_df['emotion'].isin(selected_emotions)]
 
     plt.figure(figsize=(12, 8))
-    sns_palette = sns.color_palette("Set2", n_colors=len(plot_data['emotion'].unique()))
+    sns_palette = sns.color_palette("Set3", n_colors=len(plot_data['emotion'].unique()))
     
     ax = sns.boxplot(x='samples', y='distance', hue='emotion',
                      data=plot_data, palette=sns_palette, 

@@ -1,1 +1,0 @@
-{"expert_distribution_method": "gaussian_mean_0.5", "user_distribution_method": "uniform", "aggregate_method": "median", "value_method": "dot_product_median", "group_method": "permutation", "winning_method": "max_points", "num_features": 3, "num_experts": 2, "num_users": 10, "num_groups": 2, "num_rounds": 10000, "random_seed": 0}

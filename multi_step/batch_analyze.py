@@ -13,7 +13,6 @@ thisdir = pathlib.Path(__file__).parent.absolute()
 
 
 def main():
-    title = "Adaptive Shrinking Segmentation"
     output_dir = thisdir.joinpath('output')
     emotions = [folder for folder in os.listdir(
         output_dir) if os.path.isdir(output_dir.joinpath(folder))]
@@ -21,7 +20,6 @@ def main():
     gen3_distances = []
     all_data = []
     emotion_percentiles = {}
-    mean_distance_data = []
 
     for emotion_target in emotions:
         emotion_dir = output_dir.joinpath(emotion_target)
@@ -42,20 +40,13 @@ def main():
                 (emotion_dir.joinpath(f"all_sentences_{gen}.json")).read_text())
             output_distances = [np.linalg.norm(
                 center - np.array(sentence["emotion"])) for sentence in output_sentences]
-            rows.extend([(idx, f"Gen {gen}", dist, emotion_target) for idx, dist in zip(
+            rows.extend([(idx, gen, dist, emotion_target) for idx, dist in zip(
                 range(1, len(output_distances) + 1), output_distances)])
-            
-            mean_distance = np.mean(output_distances)
-            mean_distance_data.append({
-                "generation": f"Gen {gen}",
-                "mean_distance": mean_distance,
-                "emotion": emotion_target
-            })
 
         df = pd.DataFrame(
             rows, columns=["num", "generation", "distance", "emotion"])
 
-        gen3_mean_distance = df[df['generation'] == 'Gen 3']['distance'].mean()
+        gen3_mean_distance = df[df['generation'] == 3]['distance'].mean()
         gen3_distances.append(gen3_mean_distance)
 
         all_data.append(df)
@@ -89,7 +80,7 @@ def main():
         plt.axhspan(lower_bound, upper_bound, facecolor=color,
                     alpha=0.75)
 
-    plt.title(f"Distance Distribution Comparison - {title}")
+    plt.title(f"Distance Distribution Comparison")
     plt.ylabel('Distance from Center')
     plt.xlabel('Generation')
     plt.grid(True)
@@ -101,15 +92,6 @@ def main():
     plt.savefig(output_dir.joinpath('combined_dist.png'))
     plt.clf()
     plt.close()
-
-    mean_distance_df = pd.DataFrame(mean_distance_data)
-    pivot_df = mean_distance_df.pivot(index='emotion', columns='generation', values='mean_distance')
-    csv_path = output_dir.joinpath('mean_distance.csv')
-
-    with open(csv_path, 'w', encoding='utf-8') as file:
-        file.write(f"# {title}\n")
-        pivot_df.to_csv(file)
-
 
 if __name__ == "__main__":
     main()
