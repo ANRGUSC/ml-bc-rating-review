@@ -1,6 +1,6 @@
 # Collaborative LLM Fine-tuning Experiments
 
-This repository contains two experiments exploring collaborative approaches to fine-tuning language models and measuring user contributions.
+This repository contains two experiments which form the foundation of our proposal for a open, crowdsource supervised fine-tuning method.
 
 ## 1. Point in Space Simulation (`point_in_space_sim`)
 
@@ -17,7 +17,7 @@ The results demonstrate that competitive selection in fine-tuning leads to bette
 
 ## 2. User Grouping, Evaluation, and Contribution Analysis (`user_grouping_evaluation_sim`)
 
-This experiment investigates how to group users for collaborative fine-tuning and accurately track their contributions to model improvements.
+This experiment uses the multi-model approach as our foundation and focuses on how we can group users and evaluate model performance to optimize model convergence and our point system's correlation with Shapley values.
 
 ### Key Components:
 
@@ -40,7 +40,7 @@ This experiment investigates how to group users for collaborative fine-tuning an
   - Computes contribution scores based on marginal improvements
   - Validates scoring mechanism against estimated Shapley values
 
-The experiment aims to identify optimal grouping strategies and evaluation metrics while ensuring that contribution tracking correlates with Shapley values and that model converges toward the expert point.
+The experiment aims to identify optimal grouping strategies and evaluation methods while ensuring that contribution tracking correlates with Shapley values and that model converges toward the expert point.
 
 ## Installation
 
