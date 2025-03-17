@@ -1,0 +1,4 @@
+emotion,gen1_mean_distance,gen2_mean_distance,gen3_mean_distance,gen1_to_gen2_improvement_pct,gen2_to_gen3_improvement_pct,gen1_to_gen3_improvement_pct
+disappointment,0.78,0.77,0.66,1.91,14.39,16.03
+nervousness,0.67,0.68,0.62,-0.39,8.2,7.84
+neutral,0.21,0.13,0.12,37.57,9.86,43.73

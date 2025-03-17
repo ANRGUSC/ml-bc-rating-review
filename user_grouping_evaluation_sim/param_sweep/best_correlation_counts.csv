@@ -1,0 +1,5 @@
+Grouping Function,Evaluation Function,Count (Best Correlation),Percentage (Best Correlation)
+random,l2_norm,18,75.0
+interleaved,l2_norm,3,12.5
+random,dot_product,2,8.333333333333334
+interleaved,dot_product,1,4.166666666666667
