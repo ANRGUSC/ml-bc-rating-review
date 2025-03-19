@@ -527,24 +527,22 @@ def simulation(model_point: np.ndarray,
         value_cur = evaluation_func(model_point, expert_point)
         candidate_values = [evaluation_func(c, expert_point) for c in candidate_points]
 
-        best_candidate_index = np.argmax(candidate_values)
-        best_candidate_value = candidate_values[best_candidate_index]
+        correct_rankings = np.argsort(candidate_values)[::-1]
+        best_candidate_value = candidate_values[correct_rankings[0]]
 
         # Only update if any candidate improves on the current model
         if value_cur < best_candidate_value:
-            # Choose candidate index with error probability (optional)
             if np.random.rand() < error_probability:
-                available_indices = list(range(len(candidate_points)))
-                available_indices.remove(best_candidate_index)
-                chosen_index = random.choice(available_indices)
+                incorrect_best = np.random.randint(1, len(correct_rankings))
+                correct_rankings[0], correct_rankings[incorrect_best] = correct_rankings[incorrect_best], correct_rankings[0]
+                chosen_index = correct_rankings[0]
             else:
-                chosen_index = best_candidate_index
+                chosen_index = correct_rankings[0]
 
-            # For each group, update the group’s points by the marginal difference 
-            # (which can be negative or positive)
-            for i, group in enumerate(groups):
-                reward = candidate_values[i] - value_cur
-                point_values[group] += reward
+            for rank, group_idx in enumerate(correct_rankings):
+                group = groups[group_idx]
+                delta_g = num_groups - rank
+                point_values[group] += delta_g
 
             # Finally, update the model point using the candidate of the chosen group
             chosen_subsets.append(groups[chosen_index])
@@ -639,5 +637,5 @@ def run_movie(num_users: int,
     return df_stats, df_model, model_history, expert_point, user_points, chosen_subsets
 
 if __name__ == "__main__":
-    run_movie(num_users=75, num_experts=1, num_runs=50, num_groups=4)
+    run_movie(num_users=100, num_experts=1, num_runs=50, num_groups=4)
 

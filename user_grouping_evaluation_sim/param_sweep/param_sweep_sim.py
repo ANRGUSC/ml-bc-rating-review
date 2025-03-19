@@ -82,7 +82,7 @@ def parameterSweep(num_users_list: List[int],
 
 def main():
     # Define the parameter ranges for the sweep
-    num_users_list = [10, 20, 25, 50, 75, 100]
+    num_users_list = [10, 25, 50, 75, 100]
     num_groups_list = [2, 3, 4, 5]
     
     # Run the parameter sweep
