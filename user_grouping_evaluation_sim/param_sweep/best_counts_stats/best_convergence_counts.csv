@@ -1,0 +1,6 @@
+Grouping Function,Evaluation Function,Count (Best Convergence),Percentage (Best Convergence)
+epsilon_greedy,l2_norm,12,60.0
+epsilon_greedy,l1_norm,3,15.0
+interleaved,l2_norm,2,10.0
+random,l2_norm,2,10.0
+random,l1_norm,1,5.0

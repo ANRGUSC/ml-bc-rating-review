@@ -35,15 +35,12 @@ def grouping_random(user_points, point_values, model_point, round_i, num_of_roun
 
 def grouping_epsilon_greedy(user_points, point_values, model_point, round_i, num_of_rounds, num_groups=2):
     """Reduces randomness in grouping over time, favoring higher point-valued agents."""
-    # Calculate the temperature parameter
     temperature = 1 - (round_i / num_of_rounds)  # Decreases from 1 to 0 over rounds
     probability = max(0.4, temperature)
 
     if random.random() < probability:
-        # Random grouping
         users_shuffled = np.random.permutation(len(user_points))
     else:
-        # Group by point values
         users_shuffled = np.argsort(point_values)
 
     return np.array_split(users_shuffled, num_groups)
@@ -109,7 +106,7 @@ def create_individual_shapley_plots(df_points_avg_last_round):
             combination_data,
             x='Points',
             y='Real Shapley Value',
-            color='Combined',  # This will still be unique since we're filtering by combination
+            color='Combined',
             title=f'Shapley vs Points for {combination}',
             labels={
                 'Points': 'Points',

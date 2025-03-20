@@ -30,7 +30,7 @@ def simulation_for_params(params):
         num_of_rounds=num_of_rounds,
         num_groups=num_groups
     )
-    # Annotate results with current parameters
+
     df_stats['num_users'] = num_users
     df_stats['num_groups'] = num_groups
     df_model['num_users'] = num_users
@@ -73,7 +73,6 @@ def parameterSweep(num_users_list: List[int],
     df_combined_stats.to_csv(os.path.join(stats_dir, "combined_simulation_stats.csv"), index=False)
     df_combined_model.to_csv(os.path.join(stats_dir, "combined_model_stats.csv"), index=False)
     
-    # Aggregate results across runs (average the metrics for each parameter combination)
     df_avg = df_combined_stats.groupby(['Grouping Function', 'Evaluation Function', 'num_users', 'num_groups']).agg({
         'Pearson Correlation': 'mean',
         'Convergence Accuracy (final distance)': 'mean'
@@ -81,11 +80,9 @@ def parameterSweep(num_users_list: List[int],
     df_avg.to_csv(os.path.join(stats_dir, "aggregated_stats.csv"), index=False)
 
 def main():
-    # Define the parameter ranges for the sweep
     num_users_list = [10, 25, 50, 75, 100]
     num_groups_list = [2, 3, 4, 5]
     
-    # Run the parameter sweep
     parameterSweep(
         num_users_list=num_users_list, 
         num_groups_list=num_groups_list, 
